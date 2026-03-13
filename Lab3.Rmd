@@ -62,7 +62,7 @@ cual_nominales <- c(
     "has_availability",
     "license",
     "instant_bookable",
-    "city",
+    "city"
 )
 
 cual_ordinales <- c(
@@ -102,9 +102,7 @@ cuant_discretas <- c(
     "estimated_occupancy_l365d",
     "reviews_per_month",
     "minimum_maximum_nights",
-    "maximum_maximum_nights",
-
-
+    "maximum_maximum_nights"
 )
 
 cuant_continuas <- c(
@@ -130,12 +128,12 @@ cuant_continuas <- c(
 
 cuantitativas <- c(cuant_discretas, cuant_continuas)
 cuantitativas
-datos_cuant <- carros[, cuantitativas]
+datos_cuant <- listings[, cuantitativas]
 head(datos_cuant, 5)
 
 cualitativas <- c(cual_nominales, cual_ordinales)
 cualitativas
-datos_cual <- carros[, cualitativas]
+datos_cual <- listings[, cualitativas]
 head(datos_cual, 5)
 ```
 
