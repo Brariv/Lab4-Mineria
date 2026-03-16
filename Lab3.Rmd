@@ -628,5 +628,3 @@ results_single
 ```
 ## 13. Discuta sobre la efectividad de los modelos. (Pedro)
 ¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de las casas? Haga los gráficos que crea que le pueden ayudar en la discusión.
-
-
