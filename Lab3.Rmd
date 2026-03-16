@@ -18,6 +18,7 @@ library(cluster)
 library(factoextra)
 library(hopkins)
 library(NbClust)
+library(glmnet)
 ```
 
 ## 1. Descargue el conjunto de datos.
@@ -502,6 +503,15 @@ prueba sean los mismos siempre que se ejecute el código.
 Seleccione una de las variables y haga un modelo univariado de regresión lineal para predecir el precio de
 las casas. Analice el modelo (resumen, residuos, resultados de la predicción). Muéstrelo gráficamente.
 
+```{r}
+model_single <- lm(price ~ bedrooms, data=train)
+summary(model_single)
+
+pred_full_single <- predict(model_single, newdata = test[, cuantitativas])
+actual_full_single <- test$price
+```
+
+
 ## 8. Modelo de regresión lineal (Brandon)
 Haga un modelo de regresión lineal con todas las variables numéricas para predecir el precio de las casas.
 Analice el modelo (resumen, residuos, resultados de la predicción). Muestre el modelo gráficamente.
@@ -517,12 +527,53 @@ actual_full <- test$price
 Determine si hay multicolinealidad entre las variables, y cuáles son las que aportan al modelo. Haga un análisis de correlación de las características del modelo y especifique si el modelo se
 adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no. En caso de existir sobreajuste, haga otro modelo que lo corrija.
 
-## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras
-del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo
-gráficamente.
+## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo gráficamente. (Pedro)
 
-## 11. Elabore un modelo en el que utilice al menos una de las técnicas de regularización (Javi)
+## 11. Elabore un modelo en el que utilice al menos una de las técnicas de regularización 
 (Ridge, Lasso, ElasticNet) compare los resultados con los otros modelos.
+
+```{r}
+train_clean <- na.omit(train[, cuantitativas])
+test_clean <- na.omit(test[, cuantitativas])
+
+x_train <- as.matrix(train_clean[, setdiff(cuantitativas, "price")])
+y_train <- train_clean$price
+
+x_test <- as.matrix(test_clean[, setdiff(cuantitativas, "price")])
+y_test <- test_clean$price
+
+set.seed(123) 
+cv_lasso <- cv.glmnet(x_train, y_train, alpha = 1)
+best_lambda <- cv_lasso$lambda.min
+
+model_lasso <- glmnet(x_train, y_train, alpha = 1, lambda = best_lambda)
+
+pred_lasso <- predict(model_lasso, s = best_lambda, newx = x_test)
+pred_lasso <- as.numeric(pred_lasso) 
+
+valid_idx_lasso <- complete.cases(pred_lasso, actual_lasso)
+pred_lasso_valid <- pred_lasso[valid_idx_lasso]
+actual_lasso_valid <- actual_lasso[valid_idx_lasso]
+
+results_lasso <- data.frame(
+  Modelo = c("Regresión Lasso (Regularización)"),
+  RMSE = c(
+    caret::RMSE(pred_lasso_valid, actual_lasso_valid)
+  ),
+  R2 = c(
+    r2_test(actual_lasso_valid, pred_lasso_valid)
+  )
+)
+
+results_lasso
+
+tabla_comparativa <- rbind(results_single, results_full, results_lasso)
+tabla_comparativa
+```
+
+¿Por que escogimos lasso? 
+
+En bases de datos de viviendas suele haber muchas variables numéricas que miden cosas similares. Lasso aplica un tipo de castigo matemático llamado "penalización L1". Lo especial de esta penalización es que, si una variable no aporta valor real para predecir el precio, Lasso reduce su coeficiente exactamente a cero, eliminándola del modelo por completo.
 
 ## 12. Utilice cada modelo con el conjunto de prueba (Brandon)
 Determine la eficiencia del algoritmo para predecir el precio de las casas. ¿Qué tan bien lo hizo? ¿Qué medidas usó para determinar la calidad de la predicción?
@@ -550,7 +601,31 @@ results_full <- data.frame(
 
 results_full
 ```
+```{r}
+r2_test <- function(actual, predicted) {
+  ss_res <- sum((actual - predicted)^2, na.rm = TRUE)
+  ss_tot <- sum((actual - mean(actual, na.rm = TRUE))^2, na.rm = TRUE)
+  1 - ss_res / ss_tot
+}
 
+# Remover valores NA para una comparación justa en el modelo univariado
+valid_idx_single <- complete.cases(pred_full_single, actual_full_single)
+pred_single_valid <- pred_full_single[valid_idx_single]
+actual_single_valid <- actual_full_single[valid_idx_single]
+
+results_single <- data.frame(
+  Modelo = c("Regresión Lineal Univariada"),
+  RMSE = c(
+    caret::RMSE(pred_single_valid, actual_single_valid)
+  ),
+  R2 = c(
+    r2_test(actual_single_valid, pred_single_valid)
+  )
+)
+
+# Mostrar los resultados
+results_single
+```
 ## 13. Discuta sobre la efectividad de los modelos. (Pedro)
 ¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de las casas? Haga los gráficos que crea que le pueden ayudar en la discusión.
 
