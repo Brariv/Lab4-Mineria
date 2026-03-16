@@ -1,0 +1,2837 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lab3},
+  pdfauthor={Pedro Avila, Javier Benitez, Brandon Rivera},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lab3}
+\author{Pedro Avila, Javier Benitez, Brandon Rivera}
+\date{2026-03-13}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(corrplot)}
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(lmtest)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(stringi)}
+\FunctionTok{library}\NormalTok{(cluster)}
+\FunctionTok{library}\NormalTok{(factoextra)}
+\FunctionTok{library}\NormalTok{(hopkins)}
+\FunctionTok{library}\NormalTok{(NbClust)}
+\FunctionTok{library}\NormalTok{(glmnet)}
+\FunctionTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{1. Descargue el conjunto de
+datos.}\label{descargue-el-conjunto-de-datos.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{load}\NormalTok{(}\StringTok{"Listings.RData"}\NormalTok{)}
+
+\FunctionTok{head}\NormalTok{(listings, }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      id                        listing_url    scrape_id last_scraped
+## 1  5456  https://www.airbnb.com/rooms/5456 2.025092e+13   2025-09-17
+## 2  6448  https://www.airbnb.com/rooms/6448 2.025092e+13   2025-09-17
+## 3  8502  https://www.airbnb.com/rooms/8502 2.025092e+13   2025-09-17
+## 4 13035 https://www.airbnb.com/rooms/13035 2.025092e+13   2025-09-17
+## 5 22828 https://www.airbnb.com/rooms/22828 2.025092e+13   2025-09-16
+##        source                                               name
+## 1 city scrape          Walk to 6th, Rainey St and Convention Ctr
+## 2 city scrape Secluded Studio @ Zilker - King Bed, Bright & Airy
+## 3 city scrape                            Woodland Studio Lodging
+## 4 city scrape      Historic house in highly walkable East Austin
+## 5 city scrape                 Garage Apartment central SE Austin
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   description
+## 1                                                                                                                                                                                                                                                                                                               Great central  location for walking to Convention Center, Rainey Street, East 6th Street, Downtown, Congress Ave Bats.<br /><br />  Free wifi<br /><br />No Smoking,  No pets
+## 2                                                                                                                           Clean, private space with everything you need for a quiet, comfy, private stay close to Zilker Park and Barton Springs, the river, parks, trails, and downtown. King bed, vaulted ceilings, high-speed fiber internet. Quality furnishings and amenities will make you feel at home. We offer contactless check-in/checkout, if you like (and we are vaccinated).
+## 3 Studio rental on lower level of home located in a 1950s neighborhood less than two miles from downtown Austin and close to bus routes.<br /><br />On stays less than 30 nights additional Austin city hotel taxes of 11% will be collected separately following confirmation of reservation.<br /><br />Texas state hotel taxes will be collected by Airbnb.<br /><br />Hotel taxes apply for all stays of 29 nights or less.  No hotel taxes are charged for rentals of 30 nights or more.
+## 4                                                                                                                                                                                                                                                         Comfortable 2 bedroom/2 bathroom home very centrally located on Austin’s East Side. Walk to downtown, Whole Foods, Target, CVS, plus endless local establishments and attractions here on the East Side.<br /><br />Sorry, no pets.
+## 5                                                                                                                                                                                                                                                                                                                                                                                             Fully furnished, centrally located, second story garage apartment (studio) for monthly rentals.
+##                                                                                                                                                                                                                                         neighborhood_overview
+## 1 My neighborhood is ideally located if you want to walk to bars and restaurants downtown, East 6th Street or Rainey Street.  The Convention Center is only 3 1/2 blocks away and a quick 10 minute walk. Whole foods store located 5 blks , easily walkable.
+## 2                                                                                                                                                        The neighborhood is fun and funky (but quiet)! People are friendly  and you can't beat the location.
+## 3                                                                                                                                                                                                                                                            
+## 4    East Cesar Chavez is a gentrifying urban area that remains highly diverse. Guests can walk to downtown, the Convention Center, Lady Bird Lake, Rainey Street, E. 6th Street, Franklin Barbecue, taco trailers, coffee shops, hot spots, and hidden gems.
+## 5                                                                                                                                                                                                             wikipedia: East_Riverside-Oltorf,_Austin,_Texas
+##                                                                                               picture_url
+## 1                                         https://a0.muscache.com/pictures/14084884/b5a35a84_original.jpg
+## 2 https://a0.muscache.com/pictures/airflow/Hosting-6448/original/a0ab6e9c-58ed-4d57-acb1-60cb68b068e0.jpg
+## 3   https://a0.muscache.com/pictures/miso/Hosting-8502/original/be48ea3b-6d8a-4d9b-bc13-8aa514ef246a.jpeg
+## 4  https://a0.muscache.com/pictures/miso/Hosting-13035/original/00407f5f-ff1f-4653-8832-4fbeee901a83.jpeg
+## 5  https://a0.muscache.com/pictures/miso/Hosting-22828/original/91072e92-a641-4c30-85ee-4b527c6ccac8.jpeg
+##   host_id                                host_url    host_name host_since
+## 1    8028  https://www.airbnb.com/users/show/8028       Sylvia 2009-02-16
+## 2   14156 https://www.airbnb.com/users/show/14156          Amy 2009-04-20
+## 3   25298 https://www.airbnb.com/users/show/25298        Karen 2009-07-11
+## 4   50793 https://www.airbnb.com/users/show/50793 Margaret Ann 2009-11-02
+## 5   56488 https://www.airbnb.com/users/show/56488        David 2009-11-22
+##   host_location
+## 1    Austin, TX
+## 2    Austin, TX
+## 3    Austin, TX
+## 4    Austin, TX
+## 5    Austin, TX
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  host_about
+## 1 I am a licensed Real Estate Broker and owner of Armadillo Realty.  I attended The University of Texas at Austin and fell in love with the small town that it was back in 1979; I have been here every since.  I love the Art, Music and Film scene here in Austin.  There is so much natural beauty to enjoy as well. I especially enjoy Barton Springs Pool in the summertime along with the Zilker Hillside theater productions. SXSW, Austin City Limits Festival and the East Austin Art Studio Tour are among my favorite events. I also enjoy a sunset cruise on my canoe to Congress bridge to see the Mexican Freetail Bats come out for their nightly feeding.  
+## 2                                                                                                                                                                                                                                                                                                                                      We are a family of four (with teenagers, all of us vaccinated). We love our home town and location... can't beat the park, river, and downtown. We love having guests in our garage apartment... it's fun to talk to people about their lives, hometowns, and travels. We're happy to give recommendations and want you to be comfy.
+## 3                                                                                                                                                                                                                                                                                                                                                                                                  I handle the reservations at the studio on the lower level of a house that belongs to a good friend of mine.  I really enjoy this part of town, and it is great to be offering comfortable & homey lodging for people coming from around the world to experience Austin.
+## 4                                                                                                                                                                                                                                                                                                                                       We're a responsible, easygoing couple who enjoy Austin's friendly atmosphere, good food, and great music. We enjoy gardening, reading, travel, and renovating our hundred-year-old home bit by bit.\n\nOur best times in Austin are on bikes--you can see a lot, get some sun, and get around downtown without the hassle of a car.
+## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Wyoming native living in Austin since 1996. I like to garden, read, cook, and work on DIY projects.
+##   host_response_time host_response_rate host_acceptance_rate host_is_superhost
+## 1 within a few hours               100%                  90%                 t
+## 2     within an hour               100%                  96%                 t
+## 3       within a day               100%                  60%                 f
+## 4     within an hour               100%                  91%                 t
+## 5     within an hour               100%                  71%                 t
+##                                                                                    host_thumbnail_url
+## 1  https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_small
+## 2 https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_small
+## 3 https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_small
+## 4 https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_small
+## 5 https://a0.muscache.com/im/users/56488/profile_pic/1281061774/original.jpg?aki_policy=profile_small
+##                                                                                         host_picture_url
+## 1  https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_x_medium
+## 2 https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_x_medium
+## 3 https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_x_medium
+## 4 https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_x_medium
+## 5 https://a0.muscache.com/im/users/56488/profile_pic/1281061774/original.jpg?aki_policy=profile_x_medium
+##   host_neighbourhood host_listings_count host_total_listings_count
+## 1      East Downtown                   1                         2
+## 2             Zilker                   1                         2
+## 3     East Riverside                   1                         1
+## 4      East Downtown                   2                         2
+## 5     East Riverside                   1                         1
+##   host_verifications host_has_profile_pic host_identity_verified
+## 1 ['email', 'phone']                    t                      t
+## 2 ['email', 'phone']                    t                      t
+## 3 ['email', 'phone']                    t                      f
+## 4 ['email', 'phone']                    t                      t
+## 5 ['email', 'phone']                    t                      t
+##             neighbourhood neighbourhood_cleansed neighbourhood_group_cleansed
+## 1 Neighborhood highlights                  78702                         <NA>
+## 2 Neighborhood highlights                  78704                         <NA>
+## 3                                          78741                         <NA>
+## 4 Neighborhood highlights                  78702                         <NA>
+## 5 Neighborhood highlights                  78741                         <NA>
+##   latitude longitude      property_type       room_type accommodates bathrooms
+## 1 30.26057 -97.73441  Entire guesthouse Entire home/apt            3         1
+## 2 30.26034 -97.76487  Entire guesthouse Entire home/apt            2         1
+## 3 30.23466 -97.73682 Entire guest suite Entire home/apt            2         1
+## 4 30.26098 -97.73072        Entire home Entire home/apt            3         2
+## 5 30.23614 -97.73225  Entire guesthouse Entire home/apt            2         1
+##   bathrooms_text bedrooms beds
+## 1         1 bath        1    2
+## 2         1 bath        1    2
+## 3         1 bath        1    1
+## 4        2 baths        2    2
+## 5         1 bath        1    1
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        amenities
+## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ["Iron", "Private entrance", "Hot water", "Dishes and silverware", "Refrigerator", "HDTV with Amazon Prime Video, HBO Max, Hulu, Netflix, Roku", "Self check-in", "Keypad", "Wifi", "Heating", "Hair dryer", "Bed linens", "Long term stays allowed", "Patio or balcony", "Smoke alarm", "Essentials", "Luggage dropoff allowed", "Air conditioning", "Exterior security cameras on property", "Shampoo", "Extra pillows and blankets", "Coffee maker", "Microwave", "Kitchen", "Backyard", "Hangers"]
+## 2 ["Private patio or balcony", "Stove", "Cleaning products", "First aid kit", "Wine glasses", "Iron", "Free washer \\u2013 In building", "Ceiling fan", "Private entrance", "Outdoor furniture", "Hot water", "Shower gel", "Outlet covers", "Conditioner", "Refrigerator", "Dishes and silverware", "Self check-in", "Dining table", "Free parking on premises", "Keypad", "Wifi", "Hot water kettle", "Outdoor dining area", "Hair dryer", "Room-darkening shades", "Bed linens", "Cooking basics", "TV", "Long term stays allowed", "Mini fridge", "Baking sheet", "Central air conditioning", "Oven", "Free dryer \\u2013 In building", "Children\\u2019s books and toys", "Pack \\u2019n play/Travel crib", "Smoke alarm", "Babysitter recommendations", "Central heating", "Essentials", "Clothing storage: closet and dresser", "Ethernet connection", "Luggage dropoff allowed", "Changing table", "Dedicated workspace", "Fire extinguisher", "Crib", "Shampoo", "Body soap", "Extra pillows and blankets", "Coffee maker", "Toaster", "Carbon monoxide alarm", "Laundromat nearby", "Record player", "Microwave", "Kitchen", "Board games", "Hangers", "Private backyard \\u2013 Fully fenced", "Free street parking"]
+## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ["Wifi", "Smoke alarm", "Shampoo", "Heating", "Hair dryer", "Pets allowed", "Essentials", "Host greets you", "Free street parking", "Hot water", "Kitchen", "Central air conditioning"]
+## 4                                                                                                                                                                ["Private patio or balcony", "Coffee", "Stove", "Cleaning products", "First aid kit", "Bathtub", "Wine glasses", "Iron", "Blender", "Ceiling fan", "Private entrance", "Outdoor furniture", "Dishwasher", "Hot water", "Shower gel", "Dishes and silverware", "Conditioner", "Refrigerator", "Freezer", "Coffee maker: drip coffee maker, pour-over coffee", "Self check-in", "Dining table", "Wifi", "Hot water kettle", "Heating", "Hair dryer", "Bed linens", "Cooking basics", "TV", "Long term stays allowed", "Baking sheet", "Central air conditioning", "Oven", "Dryer", "Smoke alarm", "Shared backyard \\u2013 Fully fenced", "Free washer \\u2013 In unit", "Essentials", "Clothing storage: closet and dresser", "Free driveway parking on premises \\u2013 2 spaces", "Exterior security cameras on property", "Dedicated workspace", "Fire extinguisher", "Lockbox", "Shampoo", "Body soap", "Sound system with aux", "Extra pillows and blankets", "Toaster", "Free street parking", "Carbon monoxide alarm", "Microwave", "Kitchen", "Hangers"]
+## 5                                                                                                                                                                                                                       ["AC - split type ductless system", "Cleaning products", "First aid kit", "Iron", "Free washer \\u2013 In building", "Ceiling fan", "Private entrance", "Hot water", "Dishes and silverware", "Refrigerator", "Freezer", "Dining table", "Portable fans", "Wifi", "Drying rack for clothing", "Hot water kettle", "Hair dryer", "Room-darkening shades", "Bed linens", "Cooking basics", "Long term stays allowed", "Baking sheet", "Oven", "Free dryer \\u2013 In building", "Smoke alarm", "Essentials", "43 inch HDTV with Amazon Prime Video, Apple TV, Disney+, HBO Max, Hulu, Netflix", "Heating - split type ductless system", "Host greets you", "Other electric stove", "Luggage dropoff allowed", "Books and reading material", "Exterior security cameras on property", "Clothing storage: walk-in closet, closet, and dresser", "Fire extinguisher", "Extra pillows and blankets", "Coffee maker", "Toaster", "Free street parking", "Laundromat nearby", "Microwave", "Kitchen", "Hangers"]
+##     price minimum_nights maximum_nights minimum_minimum_nights
+## 1  $97.00              2             90                      2
+## 2 $160.00              3            365                      3
+## 3  $38.00              4             90                      3
+## 4 $145.00             15            150                     15
+## 5  $58.00             30            365                     30
+##   maximum_minimum_nights minimum_maximum_nights maximum_maximum_nights
+## 1                      4                     90                     90
+## 2                      3                   1125                   1125
+## 3                     14                     90                     90
+## 4                     15                    150                    150
+## 5                     30                    365                    365
+##   minimum_nights_avg_ntm maximum_nights_avg_ntm calendar_updated
+## 1                    2.1                     90               NA
+## 2                    3.0                   1125               NA
+## 3                    6.0                     90               NA
+## 4                   15.0                    150               NA
+## 5                   30.0                    365               NA
+##   has_availability availability_30 availability_60 availability_90
+## 1                t              13              35              65
+## 2                t              12              30              50
+## 3                t              29              59              88
+## 4                t               7              17              47
+## 5                t              27              40              40
+##   availability_365 calendar_last_scraped number_of_reviews
+## 1              328            2025-09-17               708
+## 2              316            2025-09-17               339
+## 3               88            2025-09-17                54
+## 4              321            2025-09-17                19
+## 5              211            2025-09-16                56
+##   number_of_reviews_ltm number_of_reviews_l30d availability_eoy
+## 1                    25                      1               81
+## 2                    14                      1               61
+## 3                     1                      0               88
+## 4                     1                      0               63
+## 5                     3                      0               40
+##   number_of_reviews_ly estimated_occupancy_l365d estimated_revenue_l365d
+## 1                   33                       150                   14550
+## 2                   20                        84                   13440
+## 3                    2                         8                     304
+## 4                    0                        30                    4350
+## 5                    3                       180                   10440
+##   first_review last_review review_scores_rating review_scores_accuracy
+## 1   2009-03-19  2025-09-02                 4.85                   4.88
+## 2   2011-09-06  2025-08-20                 4.97                   4.97
+## 3   2010-02-19  2025-05-05                 4.57                   4.55
+## 4   2011-03-16  2025-07-31                 5.00                   4.95
+## 5   2010-03-16  2025-08-16                 4.95                   5.00
+##   review_scores_cleanliness review_scores_checkin review_scores_communication
+## 1                      4.86                  4.90                        4.82
+## 2                      4.96                  4.99                        4.98
+## 3                      4.67                  4.85                        4.88
+## 4                      4.95                  5.00                        5.00
+## 5                      4.98                  5.00                        5.00
+##   review_scores_location review_scores_value license instant_bookable
+## 1                   4.73                4.79    <NA>                f
+## 2                   4.97                4.88    <NA>                t
+## 3                   4.69                4.63    <NA>                f
+## 4                   5.00                4.95    <NA>                f
+## 5                   4.72                4.84    <NA>                f
+##   calculated_host_listings_count calculated_host_listings_count_entire_homes
+## 1                              1                                           1
+## 2                              1                                           1
+## 3                              1                                           1
+## 4                              2                                           2
+## 5                              1                                           1
+##   calculated_host_listings_count_private_rooms
+## 1                                            0
+## 2                                            0
+## 3                                            0
+## 4                                            0
+## 5                                            0
+##   calculated_host_listings_count_shared_rooms reviews_per_month          city
+## 1                                           0              3.52 Austin, Texas
+## 2                                           0              1.98 Austin, Texas
+## 3                                           0              0.28 Austin, Texas
+## 4                                           0              0.11 Austin, Texas
+## 5                                           0              0.30 Austin, Texas
+\end{verbatim}
+
+\subsection{2. Haga un análisis exploratorio extenso de los
+datos.}\label{haga-un-anuxe1lisis-exploratorio-extenso-de-los-datos.}
+
+Explique bien todos los hallazgos. No ponga solo gráficas y código. Debe
+llegar a conclusiones interesantes para poder predecir. Explique el
+preprocesamiento que necesitó hacer
+
+\subsubsection{2.1. Descripción de las
+variables}\label{descripciuxf3n-de-las-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id            listing_url          scrape_id         last_scraped      
+##  Min.   :6.000e+00   Length:171748      Min.   :2.025e+13   Length:171748     
+##  1st Qu.:3.599e+07   Class :character   1st Qu.:2.025e+13   Class :character  
+##  Median :7.250e+17   Mode  :character   Median :2.025e+13   Mode  :character  
+##  Mean   :6.363e+17                      Mean   :2.025e+13                     
+##  3rd Qu.:1.183e+18                      3rd Qu.:2.025e+13                     
+##  Max.   :1.568e+18                      Max.   :2.025e+13                     
+##                                                                               
+##     source              name           description        neighborhood_overview
+##  Length:171748      Length:171748      Length:171748      Length:171748        
+##  Class :character   Class :character   Class :character   Class :character     
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character     
+##                                                                                
+##                                                                                
+##                                                                                
+##                                                                                
+##  picture_url           host_id            host_url          host_name        
+##  Length:171748      Min.   :       23   Length:171748      Length:171748     
+##  Class :character   1st Qu.: 26330631   Class :character   Class :character  
+##  Mode  :character   Median :108058504   Mode  :character   Mode  :character  
+##                     Mean   :200257103                                        
+##                     3rd Qu.:376574507                                        
+##                     Max.   :732092326                                        
+##                                                                              
+##   host_since        host_location       host_about        host_response_time
+##  Length:171748      Length:171748      Length:171748      Length:171748     
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##                                                                             
+##  host_response_rate host_acceptance_rate host_is_superhost  host_thumbnail_url
+##  Length:171748      Length:171748        Length:171748      Length:171748     
+##  Class :character   Class :character     Class :character   Class :character  
+##  Mode  :character   Mode  :character     Mode  :character   Mode  :character  
+##                                                                               
+##                                                                               
+##                                                                               
+##                                                                               
+##  host_picture_url   host_neighbourhood host_listings_count
+##  Length:171748      Length:171748      Min.   :   0.0     
+##  Class :character   Class :character   1st Qu.:   1.0     
+##  Mode  :character   Mode  :character   Median :   4.0     
+##                                        Mean   : 190.7     
+##                                        3rd Qu.:  30.0     
+##                                        Max.   :5531.0     
+##                                        NA's   :876        
+##  host_total_listings_count host_verifications host_has_profile_pic
+##  Min.   :    0.0           Length:171748      Length:171748       
+##  1st Qu.:    2.0           Class :character   Class :character    
+##  Median :    6.0           Mode  :character   Mode  :character    
+##  Mean   :  274.6                                                  
+##  3rd Qu.:   43.0                                                  
+##  Max.   :10050.0                                                  
+##  NA's   :876                                                      
+##  host_identity_verified neighbourhood      neighbourhood_cleansed
+##  Length:171748          Length:171748      Length:171748         
+##  Class :character       Class :character   Class :character      
+##  Mode  :character       Mode  :character   Mode  :character      
+##                                                                  
+##                                                                  
+##                                                                  
+##                                                                  
+##  neighbourhood_group_cleansed    latitude       longitude     
+##  Length:171748                Min.   :18.99   Min.   :-159.7  
+##  Class :character             1st Qu.:30.38   1st Qu.:-118.6  
+##  Mode  :character             Median :34.09   Median :-117.9  
+##                               Mean   :33.78   Mean   :-109.5  
+##                               3rd Qu.:40.70   3rd Qu.: -74.0  
+##                               Max.   :42.39   Max.   : -71.0  
+##                                                               
+##  property_type       room_type          accommodates      bathrooms     
+##  Length:171748      Length:171748      Min.   : 1.000   Min.   : 0.000  
+##  Class :character   Class :character   1st Qu.: 2.000   1st Qu.: 1.000  
+##  Mode  :character   Mode  :character   Median : 4.000   Median : 1.000  
+##                                        Mean   : 4.107   Mean   : 1.552  
+##                                        3rd Qu.: 6.000   3rd Qu.: 2.000  
+##                                        Max.   :16.000   Max.   :32.500  
+##                                                         NA's   :31396   
+##  bathrooms_text        bedrooms           beds          amenities        
+##  Length:171748      Min.   : 0.000   Min.   :  0.000   Length:171748     
+##  Class :character   1st Qu.: 1.000   1st Qu.:  1.000   Class :character  
+##  Mode  :character   Median : 1.000   Median :  2.000   Mode  :character  
+##                     Mean   : 1.718   Mean   :  2.345                     
+##                     3rd Qu.: 2.000   3rd Qu.:  3.000                     
+##                     Max.   :57.000   Max.   :132.000                     
+##                     NA's   :10473    NA's   :31686                       
+##     price           minimum_nights maximum_nights      minimum_minimum_nights
+##  Length:171748      Min.   :   1   Min.   :1.000e+00   Min.   :   0.00       
+##  Class :character   1st Qu.:   2   1st Qu.:9.000e+01   1st Qu.:   2.00       
+##  Mode  :character   Median :   4   Median :3.650e+02   Median :   3.00       
+##                     Mean   :  17   Mean   :1.299e+04   Mean   :  16.54       
+##                     3rd Qu.:  30   3rd Qu.:1.125e+03   3rd Qu.:  30.00       
+##                     Max.   :1125   Max.   :2.147e+09   Max.   :1125.00       
+##                                                        NA's   :71            
+##  maximum_minimum_nights minimum_maximum_nights maximum_maximum_nights
+##  Min.   :   1.00        Min.   :1.000e+00      Min.   :1.000e+00     
+##  1st Qu.:   2.00        1st Qu.:1.000e+02      1st Qu.:3.650e+02     
+##  Median :   7.00        Median :3.650e+02      Median :3.650e+02     
+##  Mean   :  23.53        Mean   :1.882e+05      Mean   :1.677e+06     
+##  3rd Qu.:  30.00        3rd Qu.:1.125e+03      3rd Qu.:1.125e+03     
+##  Max.   :1125.00        Max.   :2.147e+09      Max.   :2.147e+09     
+##  NA's   :71             NA's   :71             NA's   :71            
+##  minimum_nights_avg_ntm maximum_nights_avg_ntm calendar_updated
+##  Min.   :   0.70        Min.   :1.000e+00      Mode:logical    
+##  1st Qu.:   2.00        1st Qu.:2.290e+02      NA's:171748     
+##  Median :   4.40        Median :3.650e+02                      
+##  Mean   :  17.49        Mean   :1.475e+06                      
+##  3rd Qu.:  30.00        3rd Qu.:1.125e+03                      
+##  Max.   :1125.00        Max.   :2.147e+09                      
+##                                                                
+##  has_availability   availability_30 availability_60 availability_90
+##  Length:171748      Min.   : 0.00   Min.   : 0.00   Min.   : 0.00  
+##  Class :character   1st Qu.: 0.00   1st Qu.: 5.00   1st Qu.:15.00  
+##  Mode  :character   Median :12.00   Median :33.00   Median :59.00  
+##                     Mean   :13.37   Mean   :30.96   Mean   :50.07  
+##                     3rd Qu.:25.00   3rd Qu.:53.00   3rd Qu.:82.00  
+##                     Max.   :30.00   Max.   :60.00   Max.   :90.00  
+##                                                                    
+##  availability_365 calendar_last_scraped number_of_reviews number_of_reviews_ltm
+##  Min.   :  0.0    Length:171748         Min.   :   0      Min.   :   0.000     
+##  1st Qu.: 86.0    Class :character      1st Qu.:   1      1st Qu.:   0.000     
+##  Median :242.0    Mode  :character      Median :   8      Median :   1.000     
+##  Mean   :207.4                          Mean   :  44      Mean   :   8.783     
+##  3rd Qu.:333.0                          3rd Qu.:  46      3rd Qu.:  10.000     
+##  Max.   :365.0                          Max.   :3920      Max.   :1565.000     
+##                                                                                
+##  number_of_reviews_l30d availability_eoy number_of_reviews_ly
+##  Min.   :  0.0000       Min.   :  0.00   Min.   :   0.000    
+##  1st Qu.:  0.0000       1st Qu.:  1.00   1st Qu.:   0.000    
+##  Median :  0.0000       Median : 26.00   Median :   0.000    
+##  Mean   :  0.6411       Mean   : 34.21   Mean   :   7.814    
+##  3rd Qu.:  1.0000       3rd Qu.: 62.00   3rd Qu.:   7.000    
+##  Max.   :107.0000       Max.   :107.00   Max.   :1797.000    
+##                                                              
+##  estimated_occupancy_l365d estimated_revenue_l365d first_review      
+##  Min.   :  0.00            Min.   :       0        Length:171748     
+##  1st Qu.:  0.00            1st Qu.:       0        Class :character  
+##  Median : 16.00            Median :    7650        Mode  :character  
+##  Mean   : 66.01            Mean   :   18284                          
+##  3rd Qu.:120.00            3rd Qu.:   23224                          
+##  Max.   :255.00            Max.   :12750000                          
+##                            NA's   :95502                             
+##  last_review        review_scores_rating review_scores_accuracy
+##  Length:171748      Min.   :0.000        Min.   :0.000         
+##  Class :character   1st Qu.:4.730        1st Qu.:4.770         
+##  Mode  :character   Median :4.890        Median :4.910         
+##                     Mean   :4.779        Mean   :4.803         
+##                     3rd Qu.:5.000        3rd Qu.:5.000         
+##                     Max.   :5.000        Max.   :5.000         
+##                     NA's   :40287        NA's   :40312         
+##  review_scores_cleanliness review_scores_checkin review_scores_communication
+##  Min.   :0.000             Min.   :0.000         Min.   :0.000              
+##  1st Qu.:4.690             1st Qu.:4.860         1st Qu.:4.860              
+##  Median :4.880             Median :4.960         Median :4.960              
+##  Mean   :4.752             Mean   :4.859         Mean   :4.853              
+##  3rd Qu.:5.000             3rd Qu.:5.000         3rd Qu.:5.000              
+##  Max.   :5.000             Max.   :5.000         Max.   :5.000              
+##  NA's   :40302             NA's   :40324         NA's   :40308              
+##  review_scores_location review_scores_value   license         
+##  Min.   :0.000          Min.   :0.00        Length:171748     
+##  1st Qu.:4.750          1st Qu.:4.62        Class :character  
+##  Median :4.910          Median :4.80        Mode  :character  
+##  Mean   :4.804          Mean   :4.69                          
+##  3rd Qu.:5.000          3rd Qu.:4.92                          
+##  Max.   :5.000          Max.   :5.00                          
+##  NA's   :40328          NA's   :40328                         
+##  instant_bookable   calculated_host_listings_count
+##  Length:171748      Min.   :   1.00               
+##  Class :character   1st Qu.:   1.00               
+##  Mode  :character   Median :   3.00               
+##                     Mean   :  45.88               
+##                     3rd Qu.:  21.00               
+##                     Max.   :1189.00               
+##                                                   
+##  calculated_host_listings_count_entire_homes
+##  Min.   :   0.00                            
+##  1st Qu.:   1.00                            
+##  Median :   1.00                            
+##  Mean   :  39.61                            
+##  3rd Qu.:  12.00                            
+##  Max.   :1189.00                            
+##                                             
+##  calculated_host_listings_count_private_rooms
+##  Min.   :  0.000                             
+##  1st Qu.:  0.000                             
+##  Median :  0.000                             
+##  Mean   :  5.539                             
+##  3rd Qu.:  1.000                             
+##  Max.   :567.000                             
+##                                              
+##  calculated_host_listings_count_shared_rooms reviews_per_month
+##  Min.   : 0.00000                            Min.   :  0.010  
+##  1st Qu.: 0.00000                            1st Qu.:  0.190  
+##  Median : 0.00000                            Median :  0.700  
+##  Mean   : 0.08211                            Mean   :  1.344  
+##  3rd Qu.: 0.00000                            3rd Qu.:  2.000  
+##  Max.   :60.00000                            Max.   :120.370  
+##                                              NA's   :40287    
+##      city          
+##  Length:171748     
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+##                    
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cual\_nominales }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"listing\_url"}\NormalTok{,}
+    \StringTok{"source"}\NormalTok{,}
+    \StringTok{"name"}\NormalTok{,}
+    \StringTok{"description"}\NormalTok{,}
+    \StringTok{"neighborhood\_overview"}\NormalTok{,}
+    \StringTok{"picture\_url"}\NormalTok{,}
+    \StringTok{"host\_url"}\NormalTok{,}
+    \StringTok{"host\_name"}\NormalTok{,}
+    \StringTok{"host\_location"}\NormalTok{,}
+    \StringTok{"host\_about"}\NormalTok{,}
+    \StringTok{"host\_is\_superhost"}\NormalTok{,}
+    \StringTok{"host\_thumbnail\_url"}\NormalTok{,}
+    \StringTok{"host\_picture\_url"}\NormalTok{,}
+    \StringTok{"host\_neighbourhood"}\NormalTok{,}
+    \StringTok{"host\_verifications"}\NormalTok{,}
+    \StringTok{"host\_has\_profile\_pic"}\NormalTok{,}
+    \StringTok{"host\_identity\_verified"}\NormalTok{,}
+    \StringTok{"neighbourhood"}\NormalTok{,}
+    \StringTok{"neighbourhood\_cleansed"}\NormalTok{,}
+    \StringTok{"neighbourhood\_group\_cleansed"}\NormalTok{,}
+    \StringTok{"bathrooms\_text"}\NormalTok{,}
+    \StringTok{"amenities"}\NormalTok{,}
+    \StringTok{"has\_availability"}\NormalTok{,}
+    \StringTok{"license"}\NormalTok{,}
+    \StringTok{"instant\_bookable"}\NormalTok{,}
+    \StringTok{"city"}
+\NormalTok{)}
+
+\NormalTok{cual\_ordinales }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"last\_scraped"}\NormalTok{,}
+    \StringTok{"host\_response\_time"}\NormalTok{,}
+    \StringTok{"host\_since"}\NormalTok{,}
+    \StringTok{"property\_type"}\NormalTok{,}
+    \StringTok{"room\_type"}\NormalTok{,}
+    \StringTok{"calendar\_last\_scraped"}\NormalTok{,}
+    \StringTok{"first\_review"}\NormalTok{,}
+    \StringTok{"last\_review"}
+\NormalTok{)}
+
+
+\NormalTok{cuant\_discretas }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"host\_listings\_count"}\NormalTok{,}
+    \StringTok{"host\_total\_listings\_count"}\NormalTok{,}
+    \StringTok{"accommodates"}\NormalTok{,}
+    \StringTok{"bedrooms"}\NormalTok{,}
+    \StringTok{"beds"}\NormalTok{,}
+    \StringTok{"minimum\_nights"}\NormalTok{,}
+    \StringTok{"minimum\_nights\_avg\_ntm"}\NormalTok{,}
+    \StringTok{"maximum\_nights"}\NormalTok{,}
+    \StringTok{"maximum\_nights\_avg\_ntm"}\NormalTok{,}
+    \StringTok{"minimum\_minimum\_nights"}\NormalTok{,}
+    \StringTok{"maximum\_minimum\_nights"}\NormalTok{,}
+    \StringTok{"availability\_30"}\NormalTok{,}
+    \StringTok{"availability\_60"}\NormalTok{,}
+    \StringTok{"availability\_90"}\NormalTok{,}
+    \StringTok{"availability\_365"}\NormalTok{,}
+    \StringTok{"number\_of\_reviews"}\NormalTok{,}
+    \StringTok{"number\_of\_reviews\_ltm"}\NormalTok{,}
+    \StringTok{"number\_of\_reviews\_l30d"}\NormalTok{,}
+    \StringTok{"availability\_eoy"}\NormalTok{,}
+    \StringTok{"number\_of\_reviews\_ly"}\NormalTok{,}
+    \StringTok{"estimated\_occupancy\_l365d"}\NormalTok{,}
+    \StringTok{"reviews\_per\_month"}\NormalTok{,}
+    \StringTok{"minimum\_maximum\_nights"}\NormalTok{,}
+    \StringTok{"maximum\_maximum\_nights"}
+\NormalTok{)}
+
+\NormalTok{cuant\_continuas }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"host\_response\_rate"}\NormalTok{,}
+    \StringTok{"host\_acceptance\_rate"}\NormalTok{,}
+    \StringTok{"latitude"}\NormalTok{,}
+    \StringTok{"longitude"}\NormalTok{,}
+    \StringTok{"bathrooms"}\NormalTok{,}
+    \StringTok{"price"}\NormalTok{,}
+    \StringTok{"review\_scores\_rating"}\NormalTok{,}
+    \StringTok{"review\_scores\_accuracy"}\NormalTok{,}
+    \StringTok{"review\_scores\_cleanliness"}\NormalTok{,}
+    \StringTok{"review\_scores\_checkin"}\NormalTok{,}
+    \StringTok{"review\_scores\_communication"}\NormalTok{,}
+    \StringTok{"review\_scores\_location"}\NormalTok{,}
+    \StringTok{"review\_scores\_value"}\NormalTok{,}
+    \StringTok{"calculated\_host\_listings\_count"}\NormalTok{,}
+    \StringTok{"calculated\_host\_listings\_count\_entire\_homes"}\NormalTok{,}
+    \StringTok{"calculated\_host\_listings\_count\_private\_rooms"}\NormalTok{,}
+    \StringTok{"calculated\_host\_listings\_count\_shared\_rooms"}\NormalTok{,}
+    \StringTok{"estimated\_revenue\_l365d"}
+\NormalTok{)}
+
+\NormalTok{cuantitativas }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(cuant\_discretas, cuant\_continuas)}
+\NormalTok{cuantitativas}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "host_listings_count"                         
+##  [2] "host_total_listings_count"                   
+##  [3] "accommodates"                                
+##  [4] "bedrooms"                                    
+##  [5] "beds"                                        
+##  [6] "minimum_nights"                              
+##  [7] "minimum_nights_avg_ntm"                      
+##  [8] "maximum_nights"                              
+##  [9] "maximum_nights_avg_ntm"                      
+## [10] "minimum_minimum_nights"                      
+## [11] "maximum_minimum_nights"                      
+## [12] "availability_30"                             
+## [13] "availability_60"                             
+## [14] "availability_90"                             
+## [15] "availability_365"                            
+## [16] "number_of_reviews"                           
+## [17] "number_of_reviews_ltm"                       
+## [18] "number_of_reviews_l30d"                      
+## [19] "availability_eoy"                            
+## [20] "number_of_reviews_ly"                        
+## [21] "estimated_occupancy_l365d"                   
+## [22] "reviews_per_month"                           
+## [23] "minimum_maximum_nights"                      
+## [24] "maximum_maximum_nights"                      
+## [25] "host_response_rate"                          
+## [26] "host_acceptance_rate"                        
+## [27] "latitude"                                    
+## [28] "longitude"                                   
+## [29] "bathrooms"                                   
+## [30] "price"                                       
+## [31] "review_scores_rating"                        
+## [32] "review_scores_accuracy"                      
+## [33] "review_scores_cleanliness"                   
+## [34] "review_scores_checkin"                       
+## [35] "review_scores_communication"                 
+## [36] "review_scores_location"                      
+## [37] "review_scores_value"                         
+## [38] "calculated_host_listings_count"              
+## [39] "calculated_host_listings_count_entire_homes" 
+## [40] "calculated_host_listings_count_private_rooms"
+## [41] "calculated_host_listings_count_shared_rooms" 
+## [42] "estimated_revenue_l365d"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{datos\_cuant }\OtherTok{\textless{}{-}}\NormalTok{ listings[, cuantitativas]}
+\FunctionTok{head}\NormalTok{(datos\_cuant, }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   host_listings_count host_total_listings_count accommodates bedrooms beds
+## 1                   1                         2            3        1    2
+## 2                   1                         2            2        1    2
+## 3                   1                         1            2        1    1
+## 4                   2                         2            3        2    2
+## 5                   1                         1            2        1    1
+##   minimum_nights minimum_nights_avg_ntm maximum_nights maximum_nights_avg_ntm
+## 1              2                    2.1             90                     90
+## 2              3                    3.0            365                   1125
+## 3              4                    6.0             90                     90
+## 4             15                   15.0            150                    150
+## 5             30                   30.0            365                    365
+##   minimum_minimum_nights maximum_minimum_nights availability_30 availability_60
+## 1                      2                      4              13              35
+## 2                      3                      3              12              30
+## 3                      3                     14              29              59
+## 4                     15                     15               7              17
+## 5                     30                     30              27              40
+##   availability_90 availability_365 number_of_reviews number_of_reviews_ltm
+## 1              65              328               708                    25
+## 2              50              316               339                    14
+## 3              88               88                54                     1
+## 4              47              321                19                     1
+## 5              40              211                56                     3
+##   number_of_reviews_l30d availability_eoy number_of_reviews_ly
+## 1                      1               81                   33
+## 2                      1               61                   20
+## 3                      0               88                    2
+## 4                      0               63                    0
+## 5                      0               40                    3
+##   estimated_occupancy_l365d reviews_per_month minimum_maximum_nights
+## 1                       150              3.52                     90
+## 2                        84              1.98                   1125
+## 3                         8              0.28                     90
+## 4                        30              0.11                    150
+## 5                       180              0.30                    365
+##   maximum_maximum_nights host_response_rate host_acceptance_rate latitude
+## 1                     90               100%                  90% 30.26057
+## 2                   1125               100%                  96% 30.26034
+## 3                     90               100%                  60% 30.23466
+## 4                    150               100%                  91% 30.26098
+## 5                    365               100%                  71% 30.23614
+##   longitude bathrooms   price review_scores_rating review_scores_accuracy
+## 1 -97.73441         1  $97.00                 4.85                   4.88
+## 2 -97.76487         1 $160.00                 4.97                   4.97
+## 3 -97.73682         1  $38.00                 4.57                   4.55
+## 4 -97.73072         2 $145.00                 5.00                   4.95
+## 5 -97.73225         1  $58.00                 4.95                   5.00
+##   review_scores_cleanliness review_scores_checkin review_scores_communication
+## 1                      4.86                  4.90                        4.82
+## 2                      4.96                  4.99                        4.98
+## 3                      4.67                  4.85                        4.88
+## 4                      4.95                  5.00                        5.00
+## 5                      4.98                  5.00                        5.00
+##   review_scores_location review_scores_value calculated_host_listings_count
+## 1                   4.73                4.79                              1
+## 2                   4.97                4.88                              1
+## 3                   4.69                4.63                              1
+## 4                   5.00                4.95                              2
+## 5                   4.72                4.84                              1
+##   calculated_host_listings_count_entire_homes
+## 1                                           1
+## 2                                           1
+## 3                                           1
+## 4                                           2
+## 5                                           1
+##   calculated_host_listings_count_private_rooms
+## 1                                            0
+## 2                                            0
+## 3                                            0
+## 4                                            0
+## 5                                            0
+##   calculated_host_listings_count_shared_rooms estimated_revenue_l365d
+## 1                                           0                   14550
+## 2                                           0                   13440
+## 3                                           0                     304
+## 4                                           0                    4350
+## 5                                           0                   10440
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cualitativas }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(cual\_nominales, cual\_ordinales)}
+\NormalTok{cualitativas}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "listing_url"                  "source"                      
+##  [3] "name"                         "description"                 
+##  [5] "neighborhood_overview"        "picture_url"                 
+##  [7] "host_url"                     "host_name"                   
+##  [9] "host_location"                "host_about"                  
+## [11] "host_is_superhost"            "host_thumbnail_url"          
+## [13] "host_picture_url"             "host_neighbourhood"          
+## [15] "host_verifications"           "host_has_profile_pic"        
+## [17] "host_identity_verified"       "neighbourhood"               
+## [19] "neighbourhood_cleansed"       "neighbourhood_group_cleansed"
+## [21] "bathrooms_text"               "amenities"                   
+## [23] "has_availability"             "license"                     
+## [25] "instant_bookable"             "city"                        
+## [27] "last_scraped"                 "host_response_time"          
+## [29] "host_since"                   "property_type"               
+## [31] "room_type"                    "calendar_last_scraped"       
+## [33] "first_review"                 "last_review"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{datos\_cual }\OtherTok{\textless{}{-}}\NormalTok{ listings[, cualitativas]}
+\FunctionTok{head}\NormalTok{(datos\_cual, }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                          listing_url      source
+## 1  https://www.airbnb.com/rooms/5456 city scrape
+## 2  https://www.airbnb.com/rooms/6448 city scrape
+## 3  https://www.airbnb.com/rooms/8502 city scrape
+## 4 https://www.airbnb.com/rooms/13035 city scrape
+## 5 https://www.airbnb.com/rooms/22828 city scrape
+##                                                 name
+## 1          Walk to 6th, Rainey St and Convention Ctr
+## 2 Secluded Studio @ Zilker - King Bed, Bright & Airy
+## 3                            Woodland Studio Lodging
+## 4      Historic house in highly walkable East Austin
+## 5                 Garage Apartment central SE Austin
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   description
+## 1                                                                                                                                                                                                                                                                                                               Great central  location for walking to Convention Center, Rainey Street, East 6th Street, Downtown, Congress Ave Bats.<br /><br />  Free wifi<br /><br />No Smoking,  No pets
+## 2                                                                                                                           Clean, private space with everything you need for a quiet, comfy, private stay close to Zilker Park and Barton Springs, the river, parks, trails, and downtown. King bed, vaulted ceilings, high-speed fiber internet. Quality furnishings and amenities will make you feel at home. We offer contactless check-in/checkout, if you like (and we are vaccinated).
+## 3 Studio rental on lower level of home located in a 1950s neighborhood less than two miles from downtown Austin and close to bus routes.<br /><br />On stays less than 30 nights additional Austin city hotel taxes of 11% will be collected separately following confirmation of reservation.<br /><br />Texas state hotel taxes will be collected by Airbnb.<br /><br />Hotel taxes apply for all stays of 29 nights or less.  No hotel taxes are charged for rentals of 30 nights or more.
+## 4                                                                                                                                                                                                                                                         Comfortable 2 bedroom/2 bathroom home very centrally located on Austin’s East Side. Walk to downtown, Whole Foods, Target, CVS, plus endless local establishments and attractions here on the East Side.<br /><br />Sorry, no pets.
+## 5                                                                                                                                                                                                                                                                                                                                                                                             Fully furnished, centrally located, second story garage apartment (studio) for monthly rentals.
+##                                                                                                                                                                                                                                         neighborhood_overview
+## 1 My neighborhood is ideally located if you want to walk to bars and restaurants downtown, East 6th Street or Rainey Street.  The Convention Center is only 3 1/2 blocks away and a quick 10 minute walk. Whole foods store located 5 blks , easily walkable.
+## 2                                                                                                                                                        The neighborhood is fun and funky (but quiet)! People are friendly  and you can't beat the location.
+## 3                                                                                                                                                                                                                                                            
+## 4    East Cesar Chavez is a gentrifying urban area that remains highly diverse. Guests can walk to downtown, the Convention Center, Lady Bird Lake, Rainey Street, E. 6th Street, Franklin Barbecue, taco trailers, coffee shops, hot spots, and hidden gems.
+## 5                                                                                                                                                                                                             wikipedia: East_Riverside-Oltorf,_Austin,_Texas
+##                                                                                               picture_url
+## 1                                         https://a0.muscache.com/pictures/14084884/b5a35a84_original.jpg
+## 2 https://a0.muscache.com/pictures/airflow/Hosting-6448/original/a0ab6e9c-58ed-4d57-acb1-60cb68b068e0.jpg
+## 3   https://a0.muscache.com/pictures/miso/Hosting-8502/original/be48ea3b-6d8a-4d9b-bc13-8aa514ef246a.jpeg
+## 4  https://a0.muscache.com/pictures/miso/Hosting-13035/original/00407f5f-ff1f-4653-8832-4fbeee901a83.jpeg
+## 5  https://a0.muscache.com/pictures/miso/Hosting-22828/original/91072e92-a641-4c30-85ee-4b527c6ccac8.jpeg
+##                                  host_url    host_name host_location
+## 1  https://www.airbnb.com/users/show/8028       Sylvia    Austin, TX
+## 2 https://www.airbnb.com/users/show/14156          Amy    Austin, TX
+## 3 https://www.airbnb.com/users/show/25298        Karen    Austin, TX
+## 4 https://www.airbnb.com/users/show/50793 Margaret Ann    Austin, TX
+## 5 https://www.airbnb.com/users/show/56488        David    Austin, TX
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  host_about
+## 1 I am a licensed Real Estate Broker and owner of Armadillo Realty.  I attended The University of Texas at Austin and fell in love with the small town that it was back in 1979; I have been here every since.  I love the Art, Music and Film scene here in Austin.  There is so much natural beauty to enjoy as well. I especially enjoy Barton Springs Pool in the summertime along with the Zilker Hillside theater productions. SXSW, Austin City Limits Festival and the East Austin Art Studio Tour are among my favorite events. I also enjoy a sunset cruise on my canoe to Congress bridge to see the Mexican Freetail Bats come out for their nightly feeding.  
+## 2                                                                                                                                                                                                                                                                                                                                      We are a family of four (with teenagers, all of us vaccinated). We love our home town and location... can't beat the park, river, and downtown. We love having guests in our garage apartment... it's fun to talk to people about their lives, hometowns, and travels. We're happy to give recommendations and want you to be comfy.
+## 3                                                                                                                                                                                                                                                                                                                                                                                                  I handle the reservations at the studio on the lower level of a house that belongs to a good friend of mine.  I really enjoy this part of town, and it is great to be offering comfortable & homey lodging for people coming from around the world to experience Austin.
+## 4                                                                                                                                                                                                                                                                                                                                       We're a responsible, easygoing couple who enjoy Austin's friendly atmosphere, good food, and great music. We enjoy gardening, reading, travel, and renovating our hundred-year-old home bit by bit.\n\nOur best times in Austin are on bikes--you can see a lot, get some sun, and get around downtown without the hassle of a car.
+## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Wyoming native living in Austin since 1996. I like to garden, read, cook, and work on DIY projects.
+##   host_is_superhost
+## 1                 t
+## 2                 t
+## 3                 f
+## 4                 t
+## 5                 t
+##                                                                                    host_thumbnail_url
+## 1  https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_small
+## 2 https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_small
+## 3 https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_small
+## 4 https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_small
+## 5 https://a0.muscache.com/im/users/56488/profile_pic/1281061774/original.jpg?aki_policy=profile_small
+##                                                                                         host_picture_url
+## 1  https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_x_medium
+## 2 https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_x_medium
+## 3 https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_x_medium
+## 4 https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_x_medium
+## 5 https://a0.muscache.com/im/users/56488/profile_pic/1281061774/original.jpg?aki_policy=profile_x_medium
+##   host_neighbourhood host_verifications host_has_profile_pic
+## 1      East Downtown ['email', 'phone']                    t
+## 2             Zilker ['email', 'phone']                    t
+## 3     East Riverside ['email', 'phone']                    t
+## 4      East Downtown ['email', 'phone']                    t
+## 5     East Riverside ['email', 'phone']                    t
+##   host_identity_verified           neighbourhood neighbourhood_cleansed
+## 1                      t Neighborhood highlights                  78702
+## 2                      t Neighborhood highlights                  78704
+## 3                      f                                          78741
+## 4                      t Neighborhood highlights                  78702
+## 5                      t Neighborhood highlights                  78741
+##   neighbourhood_group_cleansed bathrooms_text
+## 1                         <NA>         1 bath
+## 2                         <NA>         1 bath
+## 3                         <NA>         1 bath
+## 4                         <NA>        2 baths
+## 5                         <NA>         1 bath
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        amenities
+## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ["Iron", "Private entrance", "Hot water", "Dishes and silverware", "Refrigerator", "HDTV with Amazon Prime Video, HBO Max, Hulu, Netflix, Roku", "Self check-in", "Keypad", "Wifi", "Heating", "Hair dryer", "Bed linens", "Long term stays allowed", "Patio or balcony", "Smoke alarm", "Essentials", "Luggage dropoff allowed", "Air conditioning", "Exterior security cameras on property", "Shampoo", "Extra pillows and blankets", "Coffee maker", "Microwave", "Kitchen", "Backyard", "Hangers"]
+## 2 ["Private patio or balcony", "Stove", "Cleaning products", "First aid kit", "Wine glasses", "Iron", "Free washer \\u2013 In building", "Ceiling fan", "Private entrance", "Outdoor furniture", "Hot water", "Shower gel", "Outlet covers", "Conditioner", "Refrigerator", "Dishes and silverware", "Self check-in", "Dining table", "Free parking on premises", "Keypad", "Wifi", "Hot water kettle", "Outdoor dining area", "Hair dryer", "Room-darkening shades", "Bed linens", "Cooking basics", "TV", "Long term stays allowed", "Mini fridge", "Baking sheet", "Central air conditioning", "Oven", "Free dryer \\u2013 In building", "Children\\u2019s books and toys", "Pack \\u2019n play/Travel crib", "Smoke alarm", "Babysitter recommendations", "Central heating", "Essentials", "Clothing storage: closet and dresser", "Ethernet connection", "Luggage dropoff allowed", "Changing table", "Dedicated workspace", "Fire extinguisher", "Crib", "Shampoo", "Body soap", "Extra pillows and blankets", "Coffee maker", "Toaster", "Carbon monoxide alarm", "Laundromat nearby", "Record player", "Microwave", "Kitchen", "Board games", "Hangers", "Private backyard \\u2013 Fully fenced", "Free street parking"]
+## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ["Wifi", "Smoke alarm", "Shampoo", "Heating", "Hair dryer", "Pets allowed", "Essentials", "Host greets you", "Free street parking", "Hot water", "Kitchen", "Central air conditioning"]
+## 4                                                                                                                                                                ["Private patio or balcony", "Coffee", "Stove", "Cleaning products", "First aid kit", "Bathtub", "Wine glasses", "Iron", "Blender", "Ceiling fan", "Private entrance", "Outdoor furniture", "Dishwasher", "Hot water", "Shower gel", "Dishes and silverware", "Conditioner", "Refrigerator", "Freezer", "Coffee maker: drip coffee maker, pour-over coffee", "Self check-in", "Dining table", "Wifi", "Hot water kettle", "Heating", "Hair dryer", "Bed linens", "Cooking basics", "TV", "Long term stays allowed", "Baking sheet", "Central air conditioning", "Oven", "Dryer", "Smoke alarm", "Shared backyard \\u2013 Fully fenced", "Free washer \\u2013 In unit", "Essentials", "Clothing storage: closet and dresser", "Free driveway parking on premises \\u2013 2 spaces", "Exterior security cameras on property", "Dedicated workspace", "Fire extinguisher", "Lockbox", "Shampoo", "Body soap", "Sound system with aux", "Extra pillows and blankets", "Toaster", "Free street parking", "Carbon monoxide alarm", "Microwave", "Kitchen", "Hangers"]
+## 5                                                                                                                                                                                                                       ["AC - split type ductless system", "Cleaning products", "First aid kit", "Iron", "Free washer \\u2013 In building", "Ceiling fan", "Private entrance", "Hot water", "Dishes and silverware", "Refrigerator", "Freezer", "Dining table", "Portable fans", "Wifi", "Drying rack for clothing", "Hot water kettle", "Hair dryer", "Room-darkening shades", "Bed linens", "Cooking basics", "Long term stays allowed", "Baking sheet", "Oven", "Free dryer \\u2013 In building", "Smoke alarm", "Essentials", "43 inch HDTV with Amazon Prime Video, Apple TV, Disney+, HBO Max, Hulu, Netflix", "Heating - split type ductless system", "Host greets you", "Other electric stove", "Luggage dropoff allowed", "Books and reading material", "Exterior security cameras on property", "Clothing storage: walk-in closet, closet, and dresser", "Fire extinguisher", "Extra pillows and blankets", "Coffee maker", "Toaster", "Free street parking", "Laundromat nearby", "Microwave", "Kitchen", "Hangers"]
+##   has_availability license instant_bookable          city last_scraped
+## 1                t    <NA>                f Austin, Texas   2025-09-17
+## 2                t    <NA>                t Austin, Texas   2025-09-17
+## 3                t    <NA>                f Austin, Texas   2025-09-17
+## 4                t    <NA>                f Austin, Texas   2025-09-17
+## 5                t    <NA>                f Austin, Texas   2025-09-16
+##   host_response_time host_since      property_type       room_type
+## 1 within a few hours 2009-02-16  Entire guesthouse Entire home/apt
+## 2     within an hour 2009-04-20  Entire guesthouse Entire home/apt
+## 3       within a day 2009-07-11 Entire guest suite Entire home/apt
+## 4     within an hour 2009-11-02        Entire home Entire home/apt
+## 5     within an hour 2009-11-22  Entire guesthouse Entire home/apt
+##   calendar_last_scraped first_review last_review
+## 1            2025-09-17   2009-03-19  2025-09-02
+## 2            2025-09-17   2011-09-06  2025-08-20
+## 3            2025-09-17   2010-02-19  2025-05-05
+## 4            2025-09-17   2011-03-16  2025-07-31
+## 5            2025-09-16   2010-03-16  2025-08-16
+\end{verbatim}
+
+Variables cuantitativas discretas no decidimos clasificarlas id ,
+scrape\_id , host\_id. Adicionalmente la variable calendar\_updated se
+decidio no incluirla ya que toda su data es NA
+
+\subsubsection{2.2. Análisis
+exploratorio}\label{anuxe1lisis-exploratorio}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+
+\FunctionTok{dim}\NormalTok{(listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 171748     80
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    171748 obs. of  80 variables:
+##  $ id                                          : num  5456 6448 8502 13035 22828 ...
+##  $ listing_url                                 : chr  "https://www.airbnb.com/rooms/5456" "https://www.airbnb.com/rooms/6448" "https://www.airbnb.com/rooms/8502" "https://www.airbnb.com/rooms/13035" ...
+##  $ scrape_id                                   : num  2.03e+13 2.03e+13 2.03e+13 2.03e+13 2.03e+13 ...
+##  $ last_scraped                                : chr  "2025-09-17" "2025-09-17" "2025-09-17" "2025-09-17" ...
+##  $ source                                      : chr  "city scrape" "city scrape" "city scrape" "city scrape" ...
+##  $ name                                        : chr  "Walk to 6th, Rainey St and Convention Ctr" "Secluded Studio @ Zilker - King Bed, Bright & Airy" "Woodland Studio Lodging" "Historic house in highly walkable East Austin" ...
+##  $ description                                 : chr  "Great central  location for walking to Convention Center, Rainey Street, East 6th Street, Downtown, Congress Av"| __truncated__ "Clean, private space with everything you need for a quiet, comfy, private stay close to Zilker Park and Barton "| __truncated__ "Studio rental on lower level of home located in a 1950s neighborhood less than two miles from downtown Austin a"| __truncated__ "Comfortable 2 bedroom/2 bathroom home very centrally located on Austin’s East Side. Walk to downtown, Whole Foo"| __truncated__ ...
+##  $ neighborhood_overview                       : chr  "My neighborhood is ideally located if you want to walk to bars and restaurants downtown, East 6th Street or Rai"| __truncated__ "The neighborhood is fun and funky (but quiet)! People are friendly  and you can't beat the location." "" "East Cesar Chavez is a gentrifying urban area that remains highly diverse. Guests can walk to downtown, the Con"| __truncated__ ...
+##  $ picture_url                                 : chr  "https://a0.muscache.com/pictures/14084884/b5a35a84_original.jpg" "https://a0.muscache.com/pictures/airflow/Hosting-6448/original/a0ab6e9c-58ed-4d57-acb1-60cb68b068e0.jpg" "https://a0.muscache.com/pictures/miso/Hosting-8502/original/be48ea3b-6d8a-4d9b-bc13-8aa514ef246a.jpeg" "https://a0.muscache.com/pictures/miso/Hosting-13035/original/00407f5f-ff1f-4653-8832-4fbeee901a83.jpeg" ...
+##  $ host_id                                     : int  8028 14156 25298 50793 56488 215917 230747 272156 268988 378744 ...
+##  $ host_url                                    : chr  "https://www.airbnb.com/users/show/8028" "https://www.airbnb.com/users/show/14156" "https://www.airbnb.com/users/show/25298" "https://www.airbnb.com/users/show/50793" ...
+##  $ host_name                                   : chr  "Sylvia" "Amy" "Karen" "Margaret Ann" ...
+##  $ host_since                                  : chr  "2009-02-16" "2009-04-20" "2009-07-11" "2009-11-02" ...
+##  $ host_location                               : chr  "Austin, TX" "Austin, TX" "Austin, TX" "Austin, TX" ...
+##  $ host_about                                  : chr  "I am a licensed Real Estate Broker and owner of Armadillo Realty.  I attended The University of Texas at Austin"| __truncated__ "We are a family of four (with teenagers, all of us vaccinated). We love our home town and location... can't bea"| __truncated__ "I handle the reservations at the studio on the lower level of a house that belongs to a good friend of mine.  I"| __truncated__ "We're a responsible, easygoing couple who enjoy Austin's friendly atmosphere, good food, and great music. We en"| __truncated__ ...
+##  $ host_response_time                          : chr  "within a few hours" "within an hour" "within a day" "within an hour" ...
+##  $ host_response_rate                          : chr  "100%" "100%" "100%" "100%" ...
+##  $ host_acceptance_rate                        : chr  "90%" "96%" "60%" "91%" ...
+##  $ host_is_superhost                           : chr  "t" "t" "f" "t" ...
+##  $ host_thumbnail_url                          : chr  "https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_small" "https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_small" "https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_small" "https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_small" ...
+##  $ host_picture_url                            : chr  "https://a0.muscache.com/im/users/8028/profile_pic/1329882962/original.jpg?aki_policy=profile_x_medium" "https://a0.muscache.com/im/users/14156/profile_pic/1413388190/original.jpg?aki_policy=profile_x_medium" "https://a0.muscache.com/im/users/25298/profile_pic/1330879914/original.jpg?aki_policy=profile_x_medium" "https://a0.muscache.com/im/users/50793/profile_pic/1368134658/original.jpg?aki_policy=profile_x_medium" ...
+##  $ host_neighbourhood                          : chr  "East Downtown" "Zilker" "East Riverside" "East Downtown" ...
+##  $ host_listings_count                         : int  1 1 1 2 1 1 1 1 1 1 ...
+##  $ host_total_listings_count                   : int  2 2 1 2 1 1 2 2 2 1 ...
+##  $ host_verifications                          : chr  "['email', 'phone']" "['email', 'phone']" "['email', 'phone']" "['email', 'phone']" ...
+##  $ host_has_profile_pic                        : chr  "t" "t" "t" "t" ...
+##  $ host_identity_verified                      : chr  "t" "t" "f" "t" ...
+##  $ neighbourhood                               : chr  "Neighborhood highlights" "Neighborhood highlights" "" "Neighborhood highlights" ...
+##  $ neighbourhood_cleansed                      : chr  "78702" "78704" "78741" "78702" ...
+##  $ neighbourhood_group_cleansed                : chr  NA NA NA NA ...
+##  $ latitude                                    : num  30.3 30.3 30.2 30.3 30.2 ...
+##  $ longitude                                   : num  -97.7 -97.8 -97.7 -97.7 -97.7 ...
+##  $ property_type                               : chr  "Entire guesthouse" "Entire guesthouse" "Entire guest suite" "Entire home" ...
+##  $ room_type                                   : chr  "Entire home/apt" "Entire home/apt" "Entire home/apt" "Entire home/apt" ...
+##  $ accommodates                                : int  3 2 2 3 2 1 2 6 3 2 ...
+##  $ bathrooms                                   : num  1 1 1 2 1 1 1 1 1 1 ...
+##  $ bathrooms_text                              : chr  "1 bath" "1 bath" "1 bath" "2 baths" ...
+##  $ bedrooms                                    : int  1 1 1 2 1 1 2 1 1 1 ...
+##  $ beds                                        : int  2 2 1 2 1 1 0 3 1 1 ...
+##  $ amenities                                   : chr  "[\"Iron\", \"Private entrance\", \"Hot water\", \"Dishes and silverware\", \"Refrigerator\", \"HDTV with Amazon"| __truncated__ "[\"Private patio or balcony\", \"Stove\", \"Cleaning products\", \"First aid kit\", \"Wine glasses\", \"Iron\","| __truncated__ "[\"Wifi\", \"Smoke alarm\", \"Shampoo\", \"Heating\", \"Hair dryer\", \"Pets allowed\", \"Essentials\", \"Host "| __truncated__ "[\"Private patio or balcony\", \"Coffee\", \"Stove\", \"Cleaning products\", \"First aid kit\", \"Bathtub\", \""| __truncated__ ...
+##  $ price                                       : chr  "$97.00" "$160.00" "$38.00" "$145.00" ...
+##  $ minimum_nights                              : int  2 3 4 15 30 30 7 1 2 3 ...
+##  $ maximum_nights                              : int  90 365 90 150 365 120 365 365 30 60 ...
+##  $ minimum_minimum_nights                      : int  2 3 3 15 30 30 7 1 2 3 ...
+##  $ maximum_minimum_nights                      : int  4 3 14 15 30 30 7 5 2 3 ...
+##  $ minimum_maximum_nights                      : int  90 1125 90 150 365 120 365 365 30 1125 ...
+##  $ maximum_maximum_nights                      : int  90 1125 90 150 365 120 365 365 30 1125 ...
+##  $ minimum_nights_avg_ntm                      : num  2.1 3 6 15 30 30 7 1.4 2 3 ...
+##  $ maximum_nights_avg_ntm                      : num  90 1125 90 150 365 ...
+##  $ calendar_updated                            : logi  NA NA NA NA NA NA ...
+##  $ has_availability                            : chr  "t" "t" "t" "t" ...
+##  $ availability_30                             : int  13 12 29 7 27 0 30 8 18 13 ...
+##  $ availability_60                             : int  35 30 59 17 40 0 60 38 46 33 ...
+##  $ availability_90                             : int  65 50 88 47 40 0 90 68 75 63 ...
+##  $ availability_365                            : int  328 316 88 321 211 258 365 335 75 63 ...
+##  $ calendar_last_scraped                       : chr  "2025-09-17" "2025-09-17" "2025-09-17" "2025-09-17" ...
+##  $ number_of_reviews                           : int  708 339 54 19 56 9 2 1090 188 413 ...
+##  $ number_of_reviews_ltm                       : int  25 14 1 1 3 0 0 26 2 0 ...
+##  $ number_of_reviews_l30d                      : int  1 1 0 0 0 0 0 0 0 0 ...
+##  $ availability_eoy                            : int  81 61 88 63 40 0 106 84 75 63 ...
+##  $ number_of_reviews_ly                        : int  33 20 2 0 3 0 0 56 7 0 ...
+##  $ estimated_occupancy_l365d                   : int  150 84 8 30 180 0 0 156 12 0 ...
+##  $ estimated_revenue_l365d                     : int  14550 13440 304 4350 10440 0 0 23400 1980 0 ...
+##  $ first_review                                : chr  "2009-03-19" "2011-09-06" "2010-02-19" "2011-03-16" ...
+##  $ last_review                                 : chr  "2025-09-02" "2025-08-20" "2025-05-05" "2025-07-31" ...
+##  $ review_scores_rating                        : num  4.85 4.97 4.57 5 4.95 5 5 4.91 4.89 4.91 ...
+##  $ review_scores_accuracy                      : num  4.88 4.97 4.55 4.95 5 5 5 4.94 4.93 4.92 ...
+##  $ review_scores_cleanliness                   : num  4.86 4.96 4.67 4.95 4.98 5 5 4.93 4.89 4.9 ...
+##  $ review_scores_checkin                       : num  4.9 4.99 4.85 5 5 5 5 4.96 4.98 4.96 ...
+##  $ review_scores_communication                 : num  4.82 4.98 4.88 5 5 5 5 4.97 4.92 4.96 ...
+##  $ review_scores_location                      : num  4.73 4.97 4.69 5 4.72 5 5 4.95 4.95 4.9 ...
+##  $ review_scores_value                         : num  4.79 4.88 4.63 4.95 4.84 5 5 4.82 4.82 4.91 ...
+##  $ license                                     : chr  NA NA NA NA ...
+##  $ instant_bookable                            : chr  "f" "t" "f" "f" ...
+##  $ calculated_host_listings_count              : int  1 1 1 2 1 1 1 1 1 1 ...
+##  $ calculated_host_listings_count_entire_homes : int  1 1 1 2 1 0 1 1 1 1 ...
+##  $ calculated_host_listings_count_private_rooms: int  0 0 0 0 0 1 0 0 0 0 ...
+##  $ calculated_host_listings_count_shared_rooms : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ reviews_per_month                           : num  3.52 1.98 0.28 0.11 0.3 0.11 0.01 6.09 1.06 2.34 ...
+##  $ city                                        : chr  "Austin, Texas" "Austin, Texas" "Austin, Texas" "Austin, Texas" ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id            listing_url          scrape_id         last_scraped      
+##  Min.   :6.000e+00   Length:171748      Min.   :2.025e+13   Length:171748     
+##  1st Qu.:3.599e+07   Class :character   1st Qu.:2.025e+13   Class :character  
+##  Median :7.250e+17   Mode  :character   Median :2.025e+13   Mode  :character  
+##  Mean   :6.363e+17                      Mean   :2.025e+13                     
+##  3rd Qu.:1.183e+18                      3rd Qu.:2.025e+13                     
+##  Max.   :1.568e+18                      Max.   :2.025e+13                     
+##                                                                               
+##     source              name           description        neighborhood_overview
+##  Length:171748      Length:171748      Length:171748      Length:171748        
+##  Class :character   Class :character   Class :character   Class :character     
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character     
+##                                                                                
+##                                                                                
+##                                                                                
+##                                                                                
+##  picture_url           host_id            host_url          host_name        
+##  Length:171748      Min.   :       23   Length:171748      Length:171748     
+##  Class :character   1st Qu.: 26330631   Class :character   Class :character  
+##  Mode  :character   Median :108058504   Mode  :character   Mode  :character  
+##                     Mean   :200257103                                        
+##                     3rd Qu.:376574507                                        
+##                     Max.   :732092326                                        
+##                                                                              
+##   host_since        host_location       host_about        host_response_time
+##  Length:171748      Length:171748      Length:171748      Length:171748     
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##                                                                             
+##  host_response_rate host_acceptance_rate host_is_superhost  host_thumbnail_url
+##  Length:171748      Length:171748        Length:171748      Length:171748     
+##  Class :character   Class :character     Class :character   Class :character  
+##  Mode  :character   Mode  :character     Mode  :character   Mode  :character  
+##                                                                               
+##                                                                               
+##                                                                               
+##                                                                               
+##  host_picture_url   host_neighbourhood host_listings_count
+##  Length:171748      Length:171748      Min.   :   0.0     
+##  Class :character   Class :character   1st Qu.:   1.0     
+##  Mode  :character   Mode  :character   Median :   4.0     
+##                                        Mean   : 190.7     
+##                                        3rd Qu.:  30.0     
+##                                        Max.   :5531.0     
+##                                        NA's   :876        
+##  host_total_listings_count host_verifications host_has_profile_pic
+##  Min.   :    0.0           Length:171748      Length:171748       
+##  1st Qu.:    2.0           Class :character   Class :character    
+##  Median :    6.0           Mode  :character   Mode  :character    
+##  Mean   :  274.6                                                  
+##  3rd Qu.:   43.0                                                  
+##  Max.   :10050.0                                                  
+##  NA's   :876                                                      
+##  host_identity_verified neighbourhood      neighbourhood_cleansed
+##  Length:171748          Length:171748      Length:171748         
+##  Class :character       Class :character   Class :character      
+##  Mode  :character       Mode  :character   Mode  :character      
+##                                                                  
+##                                                                  
+##                                                                  
+##                                                                  
+##  neighbourhood_group_cleansed    latitude       longitude     
+##  Length:171748                Min.   :18.99   Min.   :-159.7  
+##  Class :character             1st Qu.:30.38   1st Qu.:-118.6  
+##  Mode  :character             Median :34.09   Median :-117.9  
+##                               Mean   :33.78   Mean   :-109.5  
+##                               3rd Qu.:40.70   3rd Qu.: -74.0  
+##                               Max.   :42.39   Max.   : -71.0  
+##                                                               
+##  property_type       room_type          accommodates      bathrooms     
+##  Length:171748      Length:171748      Min.   : 1.000   Min.   : 0.000  
+##  Class :character   Class :character   1st Qu.: 2.000   1st Qu.: 1.000  
+##  Mode  :character   Mode  :character   Median : 4.000   Median : 1.000  
+##                                        Mean   : 4.107   Mean   : 1.552  
+##                                        3rd Qu.: 6.000   3rd Qu.: 2.000  
+##                                        Max.   :16.000   Max.   :32.500  
+##                                                         NA's   :31396   
+##  bathrooms_text        bedrooms           beds          amenities        
+##  Length:171748      Min.   : 0.000   Min.   :  0.000   Length:171748     
+##  Class :character   1st Qu.: 1.000   1st Qu.:  1.000   Class :character  
+##  Mode  :character   Median : 1.000   Median :  2.000   Mode  :character  
+##                     Mean   : 1.718   Mean   :  2.345                     
+##                     3rd Qu.: 2.000   3rd Qu.:  3.000                     
+##                     Max.   :57.000   Max.   :132.000                     
+##                     NA's   :10473    NA's   :31686                       
+##     price           minimum_nights maximum_nights      minimum_minimum_nights
+##  Length:171748      Min.   :   1   Min.   :1.000e+00   Min.   :   0.00       
+##  Class :character   1st Qu.:   2   1st Qu.:9.000e+01   1st Qu.:   2.00       
+##  Mode  :character   Median :   4   Median :3.650e+02   Median :   3.00       
+##                     Mean   :  17   Mean   :1.299e+04   Mean   :  16.54       
+##                     3rd Qu.:  30   3rd Qu.:1.125e+03   3rd Qu.:  30.00       
+##                     Max.   :1125   Max.   :2.147e+09   Max.   :1125.00       
+##                                                        NA's   :71            
+##  maximum_minimum_nights minimum_maximum_nights maximum_maximum_nights
+##  Min.   :   1.00        Min.   :1.000e+00      Min.   :1.000e+00     
+##  1st Qu.:   2.00        1st Qu.:1.000e+02      1st Qu.:3.650e+02     
+##  Median :   7.00        Median :3.650e+02      Median :3.650e+02     
+##  Mean   :  23.53        Mean   :1.882e+05      Mean   :1.677e+06     
+##  3rd Qu.:  30.00        3rd Qu.:1.125e+03      3rd Qu.:1.125e+03     
+##  Max.   :1125.00        Max.   :2.147e+09      Max.   :2.147e+09     
+##  NA's   :71             NA's   :71             NA's   :71            
+##  minimum_nights_avg_ntm maximum_nights_avg_ntm calendar_updated
+##  Min.   :   0.70        Min.   :1.000e+00      Mode:logical    
+##  1st Qu.:   2.00        1st Qu.:2.290e+02      NA's:171748     
+##  Median :   4.40        Median :3.650e+02                      
+##  Mean   :  17.49        Mean   :1.475e+06                      
+##  3rd Qu.:  30.00        3rd Qu.:1.125e+03                      
+##  Max.   :1125.00        Max.   :2.147e+09                      
+##                                                                
+##  has_availability   availability_30 availability_60 availability_90
+##  Length:171748      Min.   : 0.00   Min.   : 0.00   Min.   : 0.00  
+##  Class :character   1st Qu.: 0.00   1st Qu.: 5.00   1st Qu.:15.00  
+##  Mode  :character   Median :12.00   Median :33.00   Median :59.00  
+##                     Mean   :13.37   Mean   :30.96   Mean   :50.07  
+##                     3rd Qu.:25.00   3rd Qu.:53.00   3rd Qu.:82.00  
+##                     Max.   :30.00   Max.   :60.00   Max.   :90.00  
+##                                                                    
+##  availability_365 calendar_last_scraped number_of_reviews number_of_reviews_ltm
+##  Min.   :  0.0    Length:171748         Min.   :   0      Min.   :   0.000     
+##  1st Qu.: 86.0    Class :character      1st Qu.:   1      1st Qu.:   0.000     
+##  Median :242.0    Mode  :character      Median :   8      Median :   1.000     
+##  Mean   :207.4                          Mean   :  44      Mean   :   8.783     
+##  3rd Qu.:333.0                          3rd Qu.:  46      3rd Qu.:  10.000     
+##  Max.   :365.0                          Max.   :3920      Max.   :1565.000     
+##                                                                                
+##  number_of_reviews_l30d availability_eoy number_of_reviews_ly
+##  Min.   :  0.0000       Min.   :  0.00   Min.   :   0.000    
+##  1st Qu.:  0.0000       1st Qu.:  1.00   1st Qu.:   0.000    
+##  Median :  0.0000       Median : 26.00   Median :   0.000    
+##  Mean   :  0.6411       Mean   : 34.21   Mean   :   7.814    
+##  3rd Qu.:  1.0000       3rd Qu.: 62.00   3rd Qu.:   7.000    
+##  Max.   :107.0000       Max.   :107.00   Max.   :1797.000    
+##                                                              
+##  estimated_occupancy_l365d estimated_revenue_l365d first_review      
+##  Min.   :  0.00            Min.   :       0        Length:171748     
+##  1st Qu.:  0.00            1st Qu.:       0        Class :character  
+##  Median : 16.00            Median :    7650        Mode  :character  
+##  Mean   : 66.01            Mean   :   18284                          
+##  3rd Qu.:120.00            3rd Qu.:   23224                          
+##  Max.   :255.00            Max.   :12750000                          
+##                            NA's   :95502                             
+##  last_review        review_scores_rating review_scores_accuracy
+##  Length:171748      Min.   :0.000        Min.   :0.000         
+##  Class :character   1st Qu.:4.730        1st Qu.:4.770         
+##  Mode  :character   Median :4.890        Median :4.910         
+##                     Mean   :4.779        Mean   :4.803         
+##                     3rd Qu.:5.000        3rd Qu.:5.000         
+##                     Max.   :5.000        Max.   :5.000         
+##                     NA's   :40287        NA's   :40312         
+##  review_scores_cleanliness review_scores_checkin review_scores_communication
+##  Min.   :0.000             Min.   :0.000         Min.   :0.000              
+##  1st Qu.:4.690             1st Qu.:4.860         1st Qu.:4.860              
+##  Median :4.880             Median :4.960         Median :4.960              
+##  Mean   :4.752             Mean   :4.859         Mean   :4.853              
+##  3rd Qu.:5.000             3rd Qu.:5.000         3rd Qu.:5.000              
+##  Max.   :5.000             Max.   :5.000         Max.   :5.000              
+##  NA's   :40302             NA's   :40324         NA's   :40308              
+##  review_scores_location review_scores_value   license         
+##  Min.   :0.000          Min.   :0.00        Length:171748     
+##  1st Qu.:4.750          1st Qu.:4.62        Class :character  
+##  Median :4.910          Median :4.80        Mode  :character  
+##  Mean   :4.804          Mean   :4.69                          
+##  3rd Qu.:5.000          3rd Qu.:4.92                          
+##  Max.   :5.000          Max.   :5.00                          
+##  NA's   :40328          NA's   :40328                         
+##  instant_bookable   calculated_host_listings_count
+##  Length:171748      Min.   :   1.00               
+##  Class :character   1st Qu.:   1.00               
+##  Mode  :character   Median :   3.00               
+##                     Mean   :  45.88               
+##                     3rd Qu.:  21.00               
+##                     Max.   :1189.00               
+##                                                   
+##  calculated_host_listings_count_entire_homes
+##  Min.   :   0.00                            
+##  1st Qu.:   1.00                            
+##  Median :   1.00                            
+##  Mean   :  39.61                            
+##  3rd Qu.:  12.00                            
+##  Max.   :1189.00                            
+##                                             
+##  calculated_host_listings_count_private_rooms
+##  Min.   :  0.000                             
+##  1st Qu.:  0.000                             
+##  Median :  0.000                             
+##  Mean   :  5.539                             
+##  3rd Qu.:  1.000                             
+##  Max.   :567.000                             
+##                                              
+##  calculated_host_listings_count_shared_rooms reviews_per_month
+##  Min.   : 0.00000                            Min.   :  0.010  
+##  1st Qu.: 0.00000                            1st Qu.:  0.190  
+##  Median : 0.00000                            Median :  0.700  
+##  Mean   : 0.08211                            Mean   :  1.344  
+##  3rd Qu.: 0.00000                            3rd Qu.:  2.000  
+##  Max.   :60.00000                            Max.   :120.370  
+##                                              NA's   :40287    
+##      city          
+##  Length:171748     
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+##                    
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(listings))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                           id 
+##                                            0 
+##                                  listing_url 
+##                                            0 
+##                                    scrape_id 
+##                                            0 
+##                                 last_scraped 
+##                                            0 
+##                                       source 
+##                                            0 
+##                                         name 
+##                                            0 
+##                                  description 
+##                                            0 
+##                        neighborhood_overview 
+##                                            0 
+##                                  picture_url 
+##                                            0 
+##                                      host_id 
+##                                            0 
+##                                     host_url 
+##                                            0 
+##                                    host_name 
+##                                            0 
+##                                   host_since 
+##                                            0 
+##                                host_location 
+##                                            0 
+##                                   host_about 
+##                                            1 
+##                           host_response_time 
+##                                            0 
+##                           host_response_rate 
+##                                            0 
+##                         host_acceptance_rate 
+##                                            0 
+##                            host_is_superhost 
+##                                            0 
+##                           host_thumbnail_url 
+##                                            0 
+##                             host_picture_url 
+##                                            0 
+##                           host_neighbourhood 
+##                                            0 
+##                          host_listings_count 
+##                                          876 
+##                    host_total_listings_count 
+##                                          876 
+##                           host_verifications 
+##                                            0 
+##                         host_has_profile_pic 
+##                                            0 
+##                       host_identity_verified 
+##                                            0 
+##                                neighbourhood 
+##                                            0 
+##                       neighbourhood_cleansed 
+##                                            0 
+##                 neighbourhood_group_cleansed 
+##                                        50683 
+##                                     latitude 
+##                                            0 
+##                                    longitude 
+##                                            0 
+##                                property_type 
+##                                            0 
+##                                    room_type 
+##                                            0 
+##                                 accommodates 
+##                                            0 
+##                                    bathrooms 
+##                                        31396 
+##                               bathrooms_text 
+##                                            0 
+##                                     bedrooms 
+##                                        10473 
+##                                         beds 
+##                                        31686 
+##                                    amenities 
+##                                            0 
+##                                        price 
+##                                        89381 
+##                               minimum_nights 
+##                                            0 
+##                               maximum_nights 
+##                                            0 
+##                       minimum_minimum_nights 
+##                                           71 
+##                       maximum_minimum_nights 
+##                                           71 
+##                       minimum_maximum_nights 
+##                                           71 
+##                       maximum_maximum_nights 
+##                                           71 
+##                       minimum_nights_avg_ntm 
+##                                            0 
+##                       maximum_nights_avg_ntm 
+##                                            0 
+##                             calendar_updated 
+##                                       171748 
+##                             has_availability 
+##                                            0 
+##                              availability_30 
+##                                            0 
+##                              availability_60 
+##                                            0 
+##                              availability_90 
+##                                            0 
+##                             availability_365 
+##                                            0 
+##                        calendar_last_scraped 
+##                                            0 
+##                            number_of_reviews 
+##                                            0 
+##                        number_of_reviews_ltm 
+##                                            0 
+##                       number_of_reviews_l30d 
+##                                            0 
+##                             availability_eoy 
+##                                            0 
+##                         number_of_reviews_ly 
+##                                            0 
+##                    estimated_occupancy_l365d 
+##                                            0 
+##                      estimated_revenue_l365d 
+##                                        95502 
+##                                 first_review 
+##                                            0 
+##                                  last_review 
+##                                            0 
+##                         review_scores_rating 
+##                                        40287 
+##                       review_scores_accuracy 
+##                                        40312 
+##                    review_scores_cleanliness 
+##                                        40302 
+##                        review_scores_checkin 
+##                                        40324 
+##                  review_scores_communication 
+##                                        40308 
+##                       review_scores_location 
+##                                        40328 
+##                          review_scores_value 
+##                                        40328 
+##                                      license 
+##                                        10533 
+##                             instant_bookable 
+##                                            0 
+##               calculated_host_listings_count 
+##                                            0 
+##  calculated_host_listings_count_entire_homes 
+##                                            0 
+## calculated_host_listings_count_private_rooms 
+##                                            0 
+##  calculated_host_listings_count_shared_rooms 
+##                                            0 
+##                            reviews_per_month 
+##                                        40287 
+##                                         city 
+##                                            0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{datos\_cuant }\OtherTok{\textless{}{-}}\NormalTok{ listings[, cuantitativas]}
+\NormalTok{datos\_cual  }\OtherTok{\textless{}{-}}\NormalTok{ listings[, cualitativas]}
+
+
+\NormalTok{listings}\SpecialCharTok{$}\NormalTok{price }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{"[$,]"}\NormalTok{, }\StringTok{""}\NormalTok{, listings}\SpecialCharTok{$}\NormalTok{price))}
+\NormalTok{listings}\SpecialCharTok{$}\NormalTok{host\_response\_rate }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{"\%"}\NormalTok{, }\StringTok{""}\NormalTok{, listings}\SpecialCharTok{$}\NormalTok{host\_response\_rate))}
+\NormalTok{listings}\SpecialCharTok{$}\NormalTok{host\_acceptance\_rate }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{"\%"}\NormalTok{, }\StringTok{""}\NormalTok{, listings}\SpecialCharTok{$}\NormalTok{host\_acceptance\_rate))}
+
+\FunctionTok{summary}\NormalTok{(datos\_cuant)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  host_listings_count host_total_listings_count  accommodates   
+##  Min.   :   0.0      Min.   :    0.0           Min.   : 1.000  
+##  1st Qu.:   1.0      1st Qu.:    2.0           1st Qu.: 2.000  
+##  Median :   4.0      Median :    6.0           Median : 4.000  
+##  Mean   : 190.7      Mean   :  274.6           Mean   : 4.107  
+##  3rd Qu.:  30.0      3rd Qu.:   43.0           3rd Qu.: 6.000  
+##  Max.   :5531.0      Max.   :10050.0           Max.   :16.000  
+##  NA's   :876         NA's   :876                               
+##     bedrooms           beds         minimum_nights minimum_nights_avg_ntm
+##  Min.   : 0.000   Min.   :  0.000   Min.   :   1   Min.   :   0.70       
+##  1st Qu.: 1.000   1st Qu.:  1.000   1st Qu.:   2   1st Qu.:   2.00       
+##  Median : 1.000   Median :  2.000   Median :   4   Median :   4.40       
+##  Mean   : 1.718   Mean   :  2.345   Mean   :  17   Mean   :  17.49       
+##  3rd Qu.: 2.000   3rd Qu.:  3.000   3rd Qu.:  30   3rd Qu.:  30.00       
+##  Max.   :57.000   Max.   :132.000   Max.   :1125   Max.   :1125.00       
+##  NA's   :10473    NA's   :31686                                          
+##  maximum_nights      maximum_nights_avg_ntm minimum_minimum_nights
+##  Min.   :1.000e+00   Min.   :1.000e+00      Min.   :   0.00       
+##  1st Qu.:9.000e+01   1st Qu.:2.290e+02      1st Qu.:   2.00       
+##  Median :3.650e+02   Median :3.650e+02      Median :   3.00       
+##  Mean   :1.299e+04   Mean   :1.475e+06      Mean   :  16.54       
+##  3rd Qu.:1.125e+03   3rd Qu.:1.125e+03      3rd Qu.:  30.00       
+##  Max.   :2.147e+09   Max.   :2.147e+09      Max.   :1125.00       
+##                                             NA's   :71            
+##  maximum_minimum_nights availability_30 availability_60 availability_90
+##  Min.   :   1.00        Min.   : 0.00   Min.   : 0.00   Min.   : 0.00  
+##  1st Qu.:   2.00        1st Qu.: 0.00   1st Qu.: 5.00   1st Qu.:15.00  
+##  Median :   7.00        Median :12.00   Median :33.00   Median :59.00  
+##  Mean   :  23.53        Mean   :13.37   Mean   :30.96   Mean   :50.07  
+##  3rd Qu.:  30.00        3rd Qu.:25.00   3rd Qu.:53.00   3rd Qu.:82.00  
+##  Max.   :1125.00        Max.   :30.00   Max.   :60.00   Max.   :90.00  
+##  NA's   :71                                                            
+##  availability_365 number_of_reviews number_of_reviews_ltm
+##  Min.   :  0.0    Min.   :   0      Min.   :   0.000     
+##  1st Qu.: 86.0    1st Qu.:   1      1st Qu.:   0.000     
+##  Median :242.0    Median :   8      Median :   1.000     
+##  Mean   :207.4    Mean   :  44      Mean   :   8.783     
+##  3rd Qu.:333.0    3rd Qu.:  46      3rd Qu.:  10.000     
+##  Max.   :365.0    Max.   :3920      Max.   :1565.000     
+##                                                          
+##  number_of_reviews_l30d availability_eoy number_of_reviews_ly
+##  Min.   :  0.0000       Min.   :  0.00   Min.   :   0.000    
+##  1st Qu.:  0.0000       1st Qu.:  1.00   1st Qu.:   0.000    
+##  Median :  0.0000       Median : 26.00   Median :   0.000    
+##  Mean   :  0.6411       Mean   : 34.21   Mean   :   7.814    
+##  3rd Qu.:  1.0000       3rd Qu.: 62.00   3rd Qu.:   7.000    
+##  Max.   :107.0000       Max.   :107.00   Max.   :1797.000    
+##                                                              
+##  estimated_occupancy_l365d reviews_per_month minimum_maximum_nights
+##  Min.   :  0.00            Min.   :  0.010   Min.   :1.000e+00     
+##  1st Qu.:  0.00            1st Qu.:  0.190   1st Qu.:1.000e+02     
+##  Median : 16.00            Median :  0.700   Median :3.650e+02     
+##  Mean   : 66.01            Mean   :  1.344   Mean   :1.882e+05     
+##  3rd Qu.:120.00            3rd Qu.:  2.000   3rd Qu.:1.125e+03     
+##  Max.   :255.00            Max.   :120.370   Max.   :2.147e+09     
+##                            NA's   :40287     NA's   :71            
+##  maximum_maximum_nights host_response_rate host_acceptance_rate    latitude    
+##  Min.   :1.000e+00      Length:171748      Length:171748        Min.   :18.99  
+##  1st Qu.:3.650e+02      Class :character   Class :character     1st Qu.:30.38  
+##  Median :3.650e+02      Mode  :character   Mode  :character     Median :34.09  
+##  Mean   :1.677e+06                                              Mean   :33.78  
+##  3rd Qu.:1.125e+03                                              3rd Qu.:40.70  
+##  Max.   :2.147e+09                                              Max.   :42.39  
+##  NA's   :71                                                                    
+##    longitude        bathrooms         price           review_scores_rating
+##  Min.   :-159.7   Min.   : 0.000   Length:171748      Min.   :0.000       
+##  1st Qu.:-118.6   1st Qu.: 1.000   Class :character   1st Qu.:4.730       
+##  Median :-117.9   Median : 1.000   Mode  :character   Median :4.890       
+##  Mean   :-109.5   Mean   : 1.552                      Mean   :4.779       
+##  3rd Qu.: -74.0   3rd Qu.: 2.000                      3rd Qu.:5.000       
+##  Max.   : -71.0   Max.   :32.500                      Max.   :5.000       
+##                   NA's   :31396                       NA's   :40287       
+##  review_scores_accuracy review_scores_cleanliness review_scores_checkin
+##  Min.   :0.000          Min.   :0.000             Min.   :0.000        
+##  1st Qu.:4.770          1st Qu.:4.690             1st Qu.:4.860        
+##  Median :4.910          Median :4.880             Median :4.960        
+##  Mean   :4.803          Mean   :4.752             Mean   :4.859        
+##  3rd Qu.:5.000          3rd Qu.:5.000             3rd Qu.:5.000        
+##  Max.   :5.000          Max.   :5.000             Max.   :5.000        
+##  NA's   :40312          NA's   :40302             NA's   :40324        
+##  review_scores_communication review_scores_location review_scores_value
+##  Min.   :0.000               Min.   :0.000          Min.   :0.00       
+##  1st Qu.:4.860               1st Qu.:4.750          1st Qu.:4.62       
+##  Median :4.960               Median :4.910          Median :4.80       
+##  Mean   :4.853               Mean   :4.804          Mean   :4.69       
+##  3rd Qu.:5.000               3rd Qu.:5.000          3rd Qu.:4.92       
+##  Max.   :5.000               Max.   :5.000          Max.   :5.00       
+##  NA's   :40308               NA's   :40328          NA's   :40328      
+##  calculated_host_listings_count calculated_host_listings_count_entire_homes
+##  Min.   :   1.00                Min.   :   0.00                            
+##  1st Qu.:   1.00                1st Qu.:   1.00                            
+##  Median :   3.00                Median :   1.00                            
+##  Mean   :  45.88                Mean   :  39.61                            
+##  3rd Qu.:  21.00                3rd Qu.:  12.00                            
+##  Max.   :1189.00                Max.   :1189.00                            
+##                                                                            
+##  calculated_host_listings_count_private_rooms
+##  Min.   :  0.000                             
+##  1st Qu.:  0.000                             
+##  Median :  0.000                             
+##  Mean   :  5.539                             
+##  3rd Qu.:  1.000                             
+##  Max.   :567.000                             
+##                                              
+##  calculated_host_listings_count_shared_rooms estimated_revenue_l365d
+##  Min.   : 0.00000                            Min.   :       0       
+##  1st Qu.: 0.00000                            1st Qu.:       0       
+##  Median : 0.00000                            Median :    7650       
+##  Mean   : 0.08211                            Mean   :   18284       
+##  3rd Qu.: 0.00000                            3rd Qu.:   23224       
+##  Max.   :60.00000                            Max.   :12750000       
+##                                              NA's   :95502
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(listings, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ price)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{bins =} \DecValTok{40}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-4-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(listings, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ review\_scores\_rating)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{bins =} \DecValTok{30}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-4-2.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(listings, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ reviews\_per\_month)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{bins =} \DecValTok{30}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-4-3.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(listings, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ price)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-4-4.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(listings, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ reviews\_per\_month)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-4-5.pdf}}
+
+Podemos ver que los datos los cuales principalmente podriamos hacer
+analisis numerico llegan a tener sesgos cada uno por su lado
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{price), }\DecValTok{5000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample(na.omit(listings$price), 5000)
+## W = 0.12483, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{review\_scores\_rating), }\DecValTok{5000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample(na.omit(listings$review_scores_rating), 5000)
+## W = 0.53136, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{reviews\_per\_month), }\DecValTok{5000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample(na.omit(listings$reviews_per_month), 5000)
+## W = 0.69239, p-value < 2.2e-16
+\end{verbatim}
+
+Haciendo la prueba de shapiro-wilks podemos darnos cuenta por que el
+p-value llega a estar mas abajo que el alpha autoimpuesto de 0.5,
+podemos darnos cuenta que no es normal.
+
+\subsubsection{2.3. Análisis de relaciones con la variable
+respuesta}\label{anuxe1lisis-de-relaciones-con-la-variable-respuesta}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(corrplot)}
+
+\NormalTok{vars\_interes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"accommodates"}\NormalTok{, }\StringTok{"bedrooms"}\NormalTok{, }\StringTok{"beds"}\NormalTok{, }\StringTok{"bathrooms"}\NormalTok{,}
+                  \StringTok{"review\_scores\_rating"}\NormalTok{, }\StringTok{"reviews\_per\_month"}\NormalTok{,}
+                  \StringTok{"availability\_365"}\NormalTok{, }\StringTok{"estimated\_occupancy\_l365d"}\NormalTok{,}
+                  \StringTok{"estimated\_revenue\_l365d"}\NormalTok{, }\StringTok{"number\_of\_reviews"}\NormalTok{)}
+
+\NormalTok{cor\_data }\OtherTok{\textless{}{-}}\NormalTok{ listings[, vars\_interes]}
+\NormalTok{cor\_data }\OtherTok{\textless{}{-}}\NormalTok{ cor\_data[}\FunctionTok{complete.cases}\NormalTok{(cor\_data), ]}
+
+\NormalTok{cor\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(cor\_data)}
+
+\FunctionTok{corrplot}\NormalTok{(cor\_matrix, }\AttributeTok{method =} \StringTok{"color"}\NormalTok{, }\AttributeTok{type =} \StringTok{"upper"}\NormalTok{,}
+         \AttributeTok{addCoef.col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{tl.col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{tl.srt =} \DecValTok{45}\NormalTok{,}
+         \AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-6-1.pdf}}
+
+Las variables \texttt{accommodates}, \texttt{bedrooms}, \texttt{beds} y
+\texttt{bathrooms} tienen la mayor correlación positiva con
+\texttt{price}. Las variables de reseñas y ocupación muestran
+correlaciones débiles.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\FunctionTok{plot}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{accommodates, listings}\SpecialCharTok{$}\NormalTok{price,}
+     \AttributeTok{main =} \StringTok{"Price vs Accommodates"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Capacidad"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ accommodates, }\AttributeTok{data =}\NormalTok{ listings), }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{bedrooms, listings}\SpecialCharTok{$}\NormalTok{price,}
+     \AttributeTok{main =} \StringTok{"Price vs Bedrooms"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Habitaciones"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bedrooms, }\AttributeTok{data =}\NormalTok{ listings), }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{bathrooms, listings}\SpecialCharTok{$}\NormalTok{price,}
+     \AttributeTok{main =} \StringTok{"Price vs Bathrooms"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Baños"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bathrooms, }\AttributeTok{data =}\NormalTok{ listings), }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{review\_scores\_rating, listings}\SpecialCharTok{$}\NormalTok{price,}
+     \AttributeTok{main =} \StringTok{"Price vs Review Score"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Calificación"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ review\_scores\_rating, }\AttributeTok{data =}\NormalTok{ listings), }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-7-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+A mayor tamaño de la propiedad, mayor precio. La calificación no muestra
+relación clara con el precio.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ room\_type, }\AttributeTok{data =}\NormalTok{ listings,}
+        \AttributeTok{main =} \StringTok{"Precio por tipo de habitación"}\NormalTok{,}
+        \AttributeTok{xlab =} \StringTok{"Tipo"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{,}
+        \AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{500}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-8-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kruskal.test}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ room\_type, }\AttributeTok{data =}\NormalTok{ listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  price by room_type
+## Kruskal-Wallis chi-squared = 8225.6, df = 3, p-value < 2.2e-16
+\end{verbatim}
+
+Los alojamientos completos tienen precios más altos. Kruskal-Wallis
+confirma que las diferencias son significativas (p \textless{} 0.05).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ city, }\AttributeTok{data =}\NormalTok{ listings,}
+        \AttributeTok{main =} \StringTok{"Precio por ciudad"}\NormalTok{,}
+        \AttributeTok{xlab =} \StringTok{"Ciudad"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Precio"}\NormalTok{,}
+        \AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{500}\NormalTok{),}
+        \AttributeTok{las =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-9-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kruskal.test}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ city, }\AttributeTok{data =}\NormalTok{ listings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  price by city
+## Kruskal-Wallis chi-squared = 8184.1, df = 6, p-value < 2.2e-16
+\end{verbatim}
+
+El precio varía según la ciudad, siendo la ubicación un factor relevante
+(p \textless{} 0.05).
+
+Conclusión: Los mejores predictores del precio son
+\texttt{accommodates}, \texttt{bedrooms}, \texttt{bathrooms},
+\texttt{room\_type} y \texttt{city}.
+
+\subsection{3. Incluya un análisis de grupos en el análisis
+exploratorio.
+(Javi)}\label{incluya-un-anuxe1lisis-de-grupos-en-el-anuxe1lisis-exploratorio.-javi}
+
+Explique las características de cada uno.
+
+Clustering
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+
+\NormalTok{vars\_cluster }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"accommodates"}\NormalTok{, }\StringTok{"bedrooms"}\NormalTok{, }\StringTok{"beds"}\NormalTok{, }
+                  \StringTok{"bathrooms"}\NormalTok{, }\StringTok{"review\_scores\_rating"}\NormalTok{, }
+                  \StringTok{"availability\_365"}\NormalTok{, }\StringTok{"estimated\_occupancy\_l365d"}\NormalTok{)}
+
+\NormalTok{datos\_cluster }\OtherTok{\textless{}{-}}\NormalTok{ listings[, vars\_cluster]}
+\NormalTok{datos\_cluster }\OtherTok{\textless{}{-}}\NormalTok{ datos\_cluster[}\FunctionTok{complete.cases}\NormalTok{(datos\_cluster), ]}
+
+\CommentTok{\# Tomar muestra representativa (máximo 3000{-}5000 filas)}
+\NormalTok{n\_muestra }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\DecValTok{3000}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(datos\_cluster))}
+\NormalTok{idx\_muestra }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(datos\_cluster), n\_muestra)}
+\NormalTok{datos\_muestra }\OtherTok{\textless{}{-}}\NormalTok{ datos\_cluster[idx\_muestra, ]}
+
+\CommentTok{\# Escalar}
+\NormalTok{datos\_scaled }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(datos\_muestra[, vars\_cluster])}
+
+\DocumentationTok{\#\#\# Hopkins}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+
+\NormalTok{idx\_hopkins }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(datos\_scaled), }\DecValTok{500}\NormalTok{)}
+\FunctionTok{hopkins}\NormalTok{(datos\_scaled[idx\_hopkins, ])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9999552
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Codo {-} rápido}
+\FunctionTok{fviz\_nbclust}\NormalTok{(datos\_scaled, kmeans, }
+             \AttributeTok{method =} \StringTok{"wss"}\NormalTok{,}
+             \AttributeTok{k.max =} \DecValTok{8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Método del Codo"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-10-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Silueta {-} rápido}
+\FunctionTok{fviz\_nbclust}\NormalTok{(datos\_scaled, kmeans, }
+             \AttributeTok{method =} \StringTok{"silhouette"}\NormalTok{,}
+             \AttributeTok{k.max =} \DecValTok{8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Método de Silueta"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-10-2.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{k\_optimo }\OtherTok{\textless{}{-}} \DecValTok{2}
+
+\NormalTok{km }\OtherTok{\textless{}{-}} \FunctionTok{kmeans}\NormalTok{(datos\_scaled, }
+             \AttributeTok{centers =}\NormalTok{ k\_optimo, }
+             \AttributeTok{iter.max =} \DecValTok{100}\NormalTok{, }
+             \AttributeTok{nstart =} \DecValTok{10}\NormalTok{)   }\CommentTok{\# reducir nstart también ayuda}
+
+\NormalTok{datos\_muestra}\SpecialCharTok{$}\NormalTok{grupo }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(km}\SpecialCharTok{$}\NormalTok{cluster)}
+
+\FunctionTok{fviz\_cluster}\NormalTok{(km, }\AttributeTok{data =}\NormalTok{ datos\_scaled,}
+             \AttributeTok{geom =} \StringTok{"point"}\NormalTok{,}
+             \AttributeTok{ellipse.type =} \StringTok{"norm"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Clusters de propiedades Airbnb"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-11-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+
+\NormalTok{perfil }\OtherTok{\textless{}{-}}\NormalTok{ datos\_muestra }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(grupo) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_cluster), mean, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `summarise()`.
+## i In argument: `across(all_of(vars_cluster), mean, na.rm = TRUE)`.
+## i In group 1: `grupo = 1`.
+## Caused by warning:
+## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+## Supply arguments directly to `.fns` through an anonymous function instead.
+## 
+##   # Previously
+##   across(a:b, mean, na.rm = TRUE)
+## 
+##   # Now
+##   across(a:b, \(x) mean(x, na.rm = TRUE))
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(perfil)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 9
+##   grupo price accommodates bedrooms  beds bathrooms review_scores_rating
+##   <fct> <dbl>        <dbl>    <dbl> <dbl>     <dbl>                <dbl>
+## 1 1      439.         3.54     1.23  1.86      1.23                 4.79
+## 2 2      702.         8.61     3.49  4.95      2.64                 4.84
+## # i 2 more variables: availability_365 <dbl>, estimated_occupancy_l365d <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(datos\_muestra, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ grupo, }\AttributeTok{y =}\NormalTok{ price, }\AttributeTok{fill =}\NormalTok{ grupo)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{coord\_cartesian}\NormalTok{(}\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{500}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Precio por grupo"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Grupo"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-13-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kruskal.test}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ grupo, }\AttributeTok{data =}\NormalTok{ datos\_muestra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Kruskal-Wallis rank sum test
+## 
+## data:  price by grupo
+## Kruskal-Wallis chi-squared = 768.23, df = 1, p-value < 2.2e-16
+\end{verbatim}
+
+\subsection{4. Divida el set de datos preprocesados
+(Brandon)}\label{divida-el-set-de-datos-preprocesados-brandon}
+
+Dividalos en dos conjuntos: Entrenamiento y prueba. Describa el criterio
+que usó para crear los conjuntos: número de filas de cada uno,
+estratificado o no, balanceado o no, etc.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+
+\NormalTok{pricing\_without\_na }\OtherTok{\textless{}{-}}\NormalTok{ listings[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(listings}\SpecialCharTok{$}\NormalTok{price), ]}
+
+\NormalTok{trainIndex }\OtherTok{\textless{}{-}} \FunctionTok{createDataPartition}\NormalTok{(pricing\_without\_na}\SpecialCharTok{$}\NormalTok{price, }\AttributeTok{p =}\NormalTok{ .}\DecValTok{7}\NormalTok{, }\AttributeTok{list =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{train }\OtherTok{\textless{}{-}}\NormalTok{ pricing\_without\_na[trainIndex, ]}
+\NormalTok{test }\OtherTok{\textless{}{-}}\NormalTok{ pricing\_without\_na[}\SpecialCharTok{{-}}\NormalTok{trainIndex, ]}
+\end{Highlighting}
+\end{Shaded}
+
+Tratamiento de outliers en `price' (IQR) sin perder filas: En vez de
+eliminar registros (lo que puede dejar 0 casos para entrenar),
+recortamos (winsorizamos) el precio a los límites IQR calculados en
+TRAIN. {[}Esta seccion del codigo fue Generado por ChatGPT para
+ayudarnos a limpiar los outliers sin perder filas{]} {[}El resto del
+codigo es nuestro tomando en base el repositorio de erick{]}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Q1 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(train}\SpecialCharTok{$}\NormalTok{price, }\FloatTok{0.25}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{Q3 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(train}\SpecialCharTok{$}\NormalTok{price, }\FloatTok{0.75}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{IQR\_value }\OtherTok{\textless{}{-}}\NormalTok{ Q3 }\SpecialCharTok{{-}}\NormalTok{ Q1}
+
+\NormalTok{low  }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(Q1 }\SpecialCharTok{{-}} \FloatTok{1.5} \SpecialCharTok{*}\NormalTok{ IQR\_value)}
+\NormalTok{high }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(Q3 }\SpecialCharTok{+} \FloatTok{1.5} \SpecialCharTok{*}\NormalTok{ IQR\_value)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"IQR bounds price (train):"}\NormalTok{, low, }\StringTok{"to"}\NormalTok{, high, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## IQR bounds price (train): -189 to 635
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Rows before {-}\textgreater{} train:"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train), }\StringTok{", test:"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(test), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows before -> train: 53373 , test: 22873
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Clip/Winsorize}
+\NormalTok{train}\SpecialCharTok{$}\NormalTok{price }\OtherTok{\textless{}{-}} \FunctionTok{pmin}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(train}\SpecialCharTok{$}\NormalTok{price, low), high)}
+\NormalTok{test}\SpecialCharTok{$}\NormalTok{price  }\OtherTok{\textless{}{-}} \FunctionTok{pmin}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(test}\SpecialCharTok{$}\NormalTok{price,  low), high)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Rows after  {-}\textgreater{} train:"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train), }\StringTok{", test:"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(test), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows after  -> train: 53373 , test: 22873
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"NA counts {-}\textgreater{} price/train:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(train}\SpecialCharTok{$}\NormalTok{price)), }\StringTok{", bedrooms/train:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(train}\SpecialCharTok{$}\NormalTok{bedrooms)), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## NA counts -> price/train: 0 , bedrooms/train: 81
+\end{verbatim}
+
+Entrenamos con el 70\% de los datos y probamos con el 30\% restante. La
+partición se hizo de manera estratificada para mantener la distribución
+del precio en ambos conjuntos. Luego, se aplicó un recorte
+(winsorización) de outliers en \texttt{price} con límites IQR calculados
+en entrenamiento, para reducir el impacto de valores extremos sin
+eliminar observaciones.
+
+\subsection{5. Haga ingeniería de características
+(Brandon)}\label{haga-ingenieruxeda-de-caracteruxedsticas-brandon}
+
+¿qué variables cree que puedan ser mejores predictores para el precio de
+las casas? Explique en que basó la selección o no de las variables.
+
+\subsubsection{Prueba de Supuestos}\label{prueba-de-supuestos}
+
+Nuestros supuestos son los siguientes: 1. Los cuatros (bedrooms) son
+linealmente relacionados con el precio. 2. Los baños (bathrooms) son
+linealmente relacionados con el precio. 3. La calificación de las
+reseñas (review\_scores\_rating) es linealmente relacionada con el
+precio.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train\_bedrooms }\OtherTok{\textless{}{-}}\NormalTok{ train[}\FunctionTok{complete.cases}\NormalTok{(train[, }\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"bedrooms"}\NormalTok{)]), ]}
+\NormalTok{train\_bathrooms }\OtherTok{\textless{}{-}}\NormalTok{ train[}\FunctionTok{complete.cases}\NormalTok{(train[, }\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"bathrooms"}\NormalTok{)]), ]}
+\NormalTok{train\_reviews }\OtherTok{\textless{}{-}}\NormalTok{ train[}\FunctionTok{complete.cases}\NormalTok{(train[, }\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"review\_scores\_rating"}\NormalTok{)]), ]}
+
+\NormalTok{model\_bedrooms }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bedrooms, }\AttributeTok{data =}\NormalTok{ train\_bedrooms)}
+\NormalTok{model\_bathrooms }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bathrooms, }\AttributeTok{data =}\NormalTok{ train\_bathrooms)}
+\NormalTok{model\_ReviewScore }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ review\_scores\_rating, }\AttributeTok{data =}\NormalTok{ train\_reviews)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Linealidad}\label{linealidad}
+
+Podemos observar que los residuos no muestran un patrón claro, lo que
+sugiere que la relación entre las variables independientes y el precio
+es aproximadamente lineal. Sin embargo, hay cierta dispersión en los
+residuos, lo que podría indicar que la relación no es perfectamente
+lineal.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(}
+  \FunctionTok{fitted}\NormalTok{(model\_bedrooms),}
+  \FunctionTok{resid}\NormalTok{(model\_bedrooms),}
+  \AttributeTok{main =} \StringTok{"Linealidad {-} Bedrooms"}
+\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(}
+  \FunctionTok{fitted}\NormalTok{(model\_bathrooms),}
+  \FunctionTok{resid}\NormalTok{(model\_bathrooms),}
+  \AttributeTok{main =} \StringTok{"Linealidad {-} Bathrooms"}
+\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(}
+  \FunctionTok{fitted}\NormalTok{(model\_ReviewScore),}
+  \FunctionTok{resid}\NormalTok{(model\_ReviewScore),}
+  \AttributeTok{main =} \StringTok{"Linealidad {-} Review Score"}
+\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-15-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Normalidad de los
+residuos}\label{normalidad-de-los-residuos}
+
+Segun la prueba de Shapiro-Wilk, los residuos de los modelos no siguen
+una distribución normal, lo que podría afectar la validez de las
+inferencias basadas en estos modelos. Sin embargo, dado el tamaño de la
+muestra, es posible que esta falta de normalidad no tenga un impacto
+significativo en la capacidad predictiva del modelo. Muy seguramente, la
+falta de normalidad se deba a la presencia de valores atípicos o a una
+distribución sesgada de los residuos, lo que es común en datos de
+precios.
+
+Regla de decisión: * Si p-value ≤ 0.05 → Se rechaza H₀ (evidencia de no
+normalidad).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_resid\_bedrooms }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{resid}\NormalTok{(model\_bedrooms), }\DecValTok{5000}\NormalTok{)}
+\NormalTok{sample\_resid\_bathrooms }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{resid}\NormalTok{(model\_bathrooms), }\DecValTok{5000}\NormalTok{)}
+\NormalTok{sample\_resid\_ReviewScore }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{resid}\NormalTok{(model\_ReviewScore), }\DecValTok{5000}\NormalTok{)}
+
+\FunctionTok{shapiro.test}\NormalTok{(sample\_resid\_bedrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample_resid_bedrooms
+## W = 0.90705, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sample\_resid\_bathrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample_resid_bathrooms
+## W = 0.91878, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sample\_resid\_ReviewScore)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample_resid_ReviewScore
+## W = 0.85344, p-value < 2.2e-16
+\end{verbatim}
+
+Hipótesis:
+
+\begin{itemize}
+\tightlist
+\item
+  H₀: Los residuos no siguen una distribución normal.
+\item
+  H₁: Los residuos siguen una distribución normal.
+\end{itemize}
+
+\subsubsection{Homocedasticidad}\label{homocedasticidad}
+
+Observamos que en nuestro caso de Review Score, los residuos muestran
+una mayor dispersión a medida que aumentan los valores ajustados, lo que
+sugiere la presencia de heterocedasticidad. En los casos de Bedrooms y
+Bathrooms, la dispersión de los residuos parece ser más constante,
+aunque también muestra cierta variabilidad.
+
+Regla de decisión: * Si p-value \textgreater{} 0.05 → No se rechaza H₀
+(varianza constante). * Si p-value ≤ 0.05 → Se rechaza H₀ (existe
+heterocedasticidad).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{bptest}\NormalTok{(model\_bedrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  studentized Breusch-Pagan test
+## 
+## data:  model_bedrooms
+## BP = 5527.4, df = 1, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{bptest}\NormalTok{(model\_bathrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  studentized Breusch-Pagan test
+## 
+## data:  model_bathrooms
+## BP = 3308.4, df = 1, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{bptest}\NormalTok{(model\_ReviewScore)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  studentized Breusch-Pagan test
+## 
+## data:  model_ReviewScore
+## BP = 39.836, df = 1, p-value = 2.762e-10
+\end{verbatim}
+
+Hipótesis:
+
+\begin{itemize}
+\tightlist
+\item
+  H₀: La varianza de los errores es constante (homocedasticidad).
+\item
+  H₁: La varianza de los errores no es constante (heterocedasticidad).
+\end{itemize}
+
+\subsubsection{Independencia}\label{independencia}
+
+En el caso de todos los modelos, el valor de Durbin-Watson tiene un p
+value menor a 0.05, lo que indica que hay evidencia de autocorrelación
+de primer orden en los residuos. Esto sugiere que los errores no son
+independientes, lo que podría afectar la validez de las inferencias
+basadas en estos modelos. * Si p-value ≤ 0.05 → Se rechaza H₀ (evidencia
+de autocorrelación).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(model\_bedrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  model_bedrooms
+## DW = 1.4031, p-value < 2.2e-16
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(model\_bathrooms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  model_bathrooms
+## DW = 1.4533, p-value < 2.2e-16
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dwtest}\NormalTok{(model\_ReviewScore)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  model_ReviewScore
+## DW = 1.6713, p-value < 2.2e-16
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+Hipótesis:
+
+\begin{itemize}
+\tightlist
+\item
+  H₀: No existe autocorrelación de primer orden en los residuos.
+\item
+  H₁: Existe autocorrelación de primer orden en los residuos.
+\end{itemize}
+
+\subsection{6. Todos los resultados deben ser reproducibles por lo que
+debe fijar que los conjuntos de entrenamiento
+y}\label{todos-los-resultados-deben-ser-reproducibles-por-lo-que-debe-fijar-que-los-conjuntos-de-entrenamiento-y}
+
+prueba sean los mismos siempre que se ejecute el código.
+
+\subsection{7. Modelo univariado de regresión lineal
+(Javi)}\label{modelo-univariado-de-regresiuxf3n-lineal-javi}
+
+Seleccione una de las variables y haga un modelo univariado de regresión
+lineal para predecir el precio de las casas. Analice el modelo (resumen,
+residuos, resultados de la predicción). Muéstrelo gráficamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_single }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ bedrooms, }\AttributeTok{data=}\NormalTok{train)}
+\FunctionTok{summary}\NormalTok{(model\_single)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ bedrooms, data = train)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -3047.04  -106.12   -37.28    63.88   496.04 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  138.958      1.096   126.8   <2e-16 ***
+## bedrooms      62.159      0.480   129.5   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 154 on 53290 degrees of freedom
+##   (81 observations deleted due to missingness)
+## Multiple R-squared:  0.2393, Adjusted R-squared:  0.2393 
+## F-statistic: 1.677e+04 on 1 and 53290 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_full\_single }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model\_single, }\AttributeTok{newdata =}\NormalTok{ test[, cuantitativas])}
+\NormalTok{actual\_full\_single }\OtherTok{\textless{}{-}}\NormalTok{ test}\SpecialCharTok{$}\NormalTok{price}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{8. Modelo de regresión lineal
+(Brandon)}\label{modelo-de-regresiuxf3n-lineal-brandon}
+
+Haga un modelo de regresión lineal con todas las variables numéricas
+para predecir el precio de las casas. Analice el modelo (resumen,
+residuos, resultados de la predicción). Muestre el modelo gráficamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_full }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ train[, cuantitativas])}
+\FunctionTok{summary}\NormalTok{(model\_full)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ ., data = train[, cuantitativas])
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1885.95   -69.69   -18.96    46.39   715.43 
+## 
+## Coefficients:
+##                                                Estimate Std. Error t value
+## (Intercept)                                  -6.315e+02  1.971e+01 -32.037
+## host_listings_count                          -1.445e-02  3.749e-03  -3.855
+## host_total_listings_count                     1.192e-02  2.298e-03   5.187
+## accommodates                                  1.688e+01  4.262e-01  39.610
+## bedrooms                                      1.182e+01  8.584e-01  13.773
+## beds                                          1.551e+00  5.616e-01   2.762
+## minimum_nights                                7.347e-01  1.030e-01   7.130
+## minimum_nights_avg_ntm                       -1.334e+00  1.600e-01  -8.335
+## maximum_nights                                4.092e-03  1.456e-03   2.811
+## maximum_nights_avg_ntm                       -7.803e-08  4.244e-08  -1.838
+## minimum_minimum_nights                       -3.688e-01  1.379e-01  -2.675
+## maximum_minimum_nights                        2.957e-01  4.531e-02   6.525
+## availability_30                               9.646e-01  1.463e-01   6.595
+## availability_60                              -3.801e-01  1.535e-01  -2.476
+## availability_90                               1.717e+00  1.768e-01   9.711
+## availability_365                              2.087e-02  6.827e-03   3.058
+## number_of_reviews                             9.074e-03  8.231e-03   1.102
+## number_of_reviews_ltm                         8.189e-01  9.546e-02   8.579
+## number_of_reviews_l30d                        1.148e-01  5.165e-01   0.222
+## availability_eoy                             -1.945e+00  1.275e-01 -15.255
+## number_of_reviews_ly                          2.258e-01  6.261e-02   3.606
+## estimated_occupancy_l365d                    -3.071e-01  1.197e-02 -25.662
+## reviews_per_month                            -1.155e+01  7.195e-01 -16.060
+## minimum_maximum_nights                       -1.477e-02  1.336e-03 -11.057
+## maximum_maximum_nights                        9.555e-08  4.072e-08   2.347
+## host_response_rate                           -3.284e-01  6.527e-02  -5.031
+## host_acceptance_rate                          6.524e-02  3.888e-02   1.678
+## latitude                                      5.811e+00  2.384e-01  24.376
+## longitude                                    -1.804e+00  5.820e-02 -30.992
+## bathrooms                                     3.838e+01  9.721e-01  39.484
+## review_scores_rating                          5.291e+01  4.290e+00  12.335
+## review_scores_accuracy                        1.410e+00  3.398e+00   0.415
+## review_scores_cleanliness                     5.019e+01  2.766e+00  18.146
+## review_scores_checkin                        -1.660e+01  2.827e+00  -5.873
+## review_scores_communication                  -1.785e+01  3.100e+00  -5.758
+## review_scores_location                        8.256e+01  2.623e+00  31.471
+## review_scores_value                          -7.300e+01  2.938e+00 -24.849
+## calculated_host_listings_count                2.404e+00  1.851e-01  12.992
+## calculated_host_listings_count_entire_homes  -2.288e+00  1.843e-01 -12.415
+## calculated_host_listings_count_private_rooms -2.330e+00  2.276e-01 -10.238
+## calculated_host_listings_count_shared_rooms  -3.111e+00  3.065e-01 -10.149
+## estimated_revenue_l365d                       1.831e-04  5.608e-06  32.654
+##                                              Pr(>|t|)    
+## (Intercept)                                   < 2e-16 ***
+## host_listings_count                          0.000116 ***
+## host_total_listings_count                    2.15e-07 ***
+## accommodates                                  < 2e-16 ***
+## bedrooms                                      < 2e-16 ***
+## beds                                         0.005753 ** 
+## minimum_nights                               1.02e-12 ***
+## minimum_nights_avg_ntm                        < 2e-16 ***
+## maximum_nights                               0.004937 ** 
+## maximum_nights_avg_ntm                       0.066000 .  
+## minimum_minimum_nights                       0.007473 ** 
+## maximum_minimum_nights                       6.86e-11 ***
+## availability_30                              4.31e-11 ***
+## availability_60                              0.013308 *  
+## availability_90                               < 2e-16 ***
+## availability_365                             0.002233 ** 
+## number_of_reviews                            0.270292    
+## number_of_reviews_ltm                         < 2e-16 ***
+## number_of_reviews_l30d                       0.824161    
+## availability_eoy                              < 2e-16 ***
+## number_of_reviews_ly                         0.000312 ***
+## estimated_occupancy_l365d                     < 2e-16 ***
+## reviews_per_month                             < 2e-16 ***
+## minimum_maximum_nights                        < 2e-16 ***
+## maximum_maximum_nights                       0.018954 *  
+## host_response_rate                           4.89e-07 ***
+## host_acceptance_rate                         0.093377 .  
+## latitude                                      < 2e-16 ***
+## longitude                                     < 2e-16 ***
+## bathrooms                                     < 2e-16 ***
+## review_scores_rating                          < 2e-16 ***
+## review_scores_accuracy                       0.678202    
+## review_scores_cleanliness                     < 2e-16 ***
+## review_scores_checkin                        4.31e-09 ***
+## review_scores_communication                  8.58e-09 ***
+## review_scores_location                        < 2e-16 ***
+## review_scores_value                           < 2e-16 ***
+## calculated_host_listings_count                < 2e-16 ***
+## calculated_host_listings_count_entire_homes   < 2e-16 ***
+## calculated_host_listings_count_private_rooms  < 2e-16 ***
+## calculated_host_listings_count_shared_rooms   < 2e-16 ***
+## estimated_revenue_l365d                       < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 113.4 on 41209 degrees of freedom
+##   (12122 observations deleted due to missingness)
+## Multiple R-squared:  0.5334, Adjusted R-squared:  0.5329 
+## F-statistic:  1149 on 41 and 41209 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_full }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model\_full, }\AttributeTok{newdata =}\NormalTok{ test[, cuantitativas])}
+\NormalTok{actual\_full }\OtherTok{\textless{}{-}}\NormalTok{ test}\SpecialCharTok{$}\NormalTok{price}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{9. Analice el modelo.
+(Pedro)}\label{analice-el-modelo.-pedro}
+
+Determine si hay multicolinealidad entre las variables, y cuáles son las
+que aportan al modelo. Haga un análisis de correlación de las
+características del modelo y especifique si el modelo se adapta bien a
+los datos. Explique si hay sobreajuste (overfitting) o no. En caso de
+existir sobreajuste, haga otro modelo que lo corrija.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{vif}\NormalTok{(model\_full)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                          host_listings_count 
+##                                     7.567422 
+##                    host_total_listings_count 
+##                                     6.206849 
+##                                 accommodates 
+##                                     5.105713 
+##                                     bedrooms 
+##                                     4.254190 
+##                                         beds 
+##                                     4.146203 
+##                               minimum_nights 
+##                                     6.725774 
+##                       minimum_nights_avg_ntm 
+##                                    14.839169 
+##                               maximum_nights 
+##                                     1.245863 
+##                       maximum_nights_avg_ntm 
+##                                    29.127493 
+##                       minimum_minimum_nights 
+##                                     9.840513 
+##                       maximum_minimum_nights 
+##                                     3.279487 
+##                              availability_30 
+##                                     6.141708 
+##                              availability_60 
+##                                    24.509974 
+##                              availability_90 
+##                                    68.335866 
+##                             availability_365 
+##                                     1.640504 
+##                            number_of_reviews 
+##                                     2.378866 
+##                        number_of_reviews_ltm 
+##                                     9.959884 
+##                       number_of_reviews_l30d 
+##                                     2.520490 
+##                             availability_eoy 
+##                                    44.303323 
+##                         number_of_reviews_ly 
+##                                     4.679056 
+##                    estimated_occupancy_l365d 
+##                                     3.440951 
+##                            reviews_per_month 
+##                                     4.936561 
+##                       minimum_maximum_nights 
+##                                     1.279989 
+##                       maximum_maximum_nights 
+##                                    29.106518 
+##                           host_response_rate 
+##                                     1.225775 
+##                         host_acceptance_rate 
+##                                     1.490040 
+##                                     latitude 
+##                                    13.171139 
+##                                    longitude 
+##                                    12.606255 
+##                                    bathrooms 
+##                                     2.589128 
+##                         review_scores_rating 
+##                                     6.158688 
+##                       review_scores_accuracy 
+##                                     3.712521 
+##                    review_scores_cleanliness 
+##                                     2.670895 
+##                        review_scores_checkin 
+##                                     2.099857 
+##                  review_scores_communication 
+##                                     2.699035 
+##                       review_scores_location 
+##                                     1.680051 
+##                          review_scores_value 
+##                                     3.608324 
+##               calculated_host_listings_count 
+##                                   975.484115 
+##  calculated_host_listings_count_entire_homes 
+##                                   965.480563 
+## calculated_host_listings_count_private_rooms 
+##                                     5.475189 
+##  calculated_host_listings_count_shared_rooms 
+##                                     1.610718 
+##                      estimated_revenue_l365d 
+##                                     1.103537
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cor\_matrix\_model }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(train[, cuantitativas], }\AttributeTok{use =} \StringTok{"complete.obs"}\NormalTok{)}
+
+
+\FunctionTok{corrplot}\NormalTok{(cor\_matrix\_model,}
+         \AttributeTok{method =} \StringTok{"color"}\NormalTok{,}
+         \AttributeTok{type =} \StringTok{"upper"}\NormalTok{,}
+         \AttributeTok{tl.col =} \StringTok{"black"}\NormalTok{,}
+         \AttributeTok{tl.srt =} \DecValTok{45}\NormalTok{,}
+         \AttributeTok{tl.cex =} \FloatTok{0.3}\NormalTok{,}
+         \AttributeTok{addCoef.col =} \ConstantTok{NULL}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-21-1.pdf}}
+
+El análisis de multicolinealidad mostró que varias variables presentan
+valores altos de VIF, especialmente las relacionadas con la
+disponibilidad (availability\_90, availability\_eoy) y los conteos de
+propiedades del host (calculated\_host\_listings\_count), indicando
+fuerte colinealidad entre ellas. Esto afecta la estabilidad e
+interpretación del modelo completo. El corrplot confirma estas
+relaciones altas entre variables similares. Aunque no se observa un
+sobreajuste severo al comparar con el modelo Lasso, es recomendable
+simplificar el modelo eliminando variables redundantes para mejorar su
+robustez y facilitar su interpretación.
+
+\subsection{10. Si tiene multicolinealidad o sobreajuste, haga un modelo
+con las variables que sean mejores predictoras del precio de las casas.
+Determine la calidad del modelo realizando un análisis de los residuos.
+Muéstrelo gráficamente.
+(Pedro)}\label{si-tiene-multicolinealidad-o-sobreajuste-haga-un-modelo-con-las-variables-que-sean-mejores-predictoras-del-precio-de-las-casas.-determine-la-calidad-del-modelo-realizando-un-anuxe1lisis-de-los-residuos.-muuxe9strelo-gruxe1ficamente.-pedro}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_reduced }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ accommodates }\SpecialCharTok{+}\NormalTok{ bedrooms }\SpecialCharTok{+}\NormalTok{ beds }\SpecialCharTok{+}\NormalTok{ bathrooms,}
+                    \AttributeTok{data =}\NormalTok{ train)}
+
+\FunctionTok{summary}\NormalTok{(model\_reduced)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ accommodates + bedrooms + beds + bathrooms, 
+##     data = train)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -688.91  -88.16  -36.26   57.98  529.13 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   62.7396     1.2570  49.912  < 2e-16 ***
+## accommodates  26.8367     0.4104  65.395  < 2e-16 ***
+## bedrooms      -4.4149     0.8488  -5.201 1.99e-07 ***
+## beds          -6.1232     0.5698 -10.747  < 2e-16 ***
+## bathrooms     51.2880     0.9962  51.485  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 140.8 on 53229 degrees of freedom
+##   (139 observations deleted due to missingness)
+## Multiple R-squared:  0.3636, Adjusted R-squared:  0.3636 
+## F-statistic:  7603 on 4 and 53229 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(model\_reduced}\SpecialCharTok{$}\NormalTok{fitted.values,}
+     \FunctionTok{resid}\NormalTok{(model\_reduced),}
+     \AttributeTok{main =} \StringTok{"Residuos vs Valores Ajustados"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Valores Ajustados"}\NormalTok{,}
+     \AttributeTok{ylab =} \StringTok{"Residuos"}\NormalTok{)}
+
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-22-1.pdf}}
+Se construyó un modelo reducido con las variables accommodates,
+bedrooms, beds y bathrooms, que son los mejores predictores
+identificados. Este modelo explica alrededor del 36\% de la variabilidad
+del precio y todos sus coeficientes son significativos. Sin embargo, el
+análisis de residuos muestra heterocedasticidad, ya que la dispersión de
+errores aumenta con los valores ajustados. Esto indica que la varianza
+de los errores no es constante y sugiere que podrían usarse
+transformaciones o métodos robustos para mejorar el modelo. A pesar de
+ello, el modelo reducido representa una mejora en estabilidad y
+simplicidad frente al modelo completo con multicolinealidad.
+
+\subsection{11. Elabore un modelo en el que utilice al menos una de las
+técnicas de
+regularización}\label{elabore-un-modelo-en-el-que-utilice-al-menos-una-de-las-tuxe9cnicas-de-regularizaciuxf3n}
+
+(Ridge, Lasso, ElasticNet) compare los resultados con los otros modelos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train\_clean }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(train[, cuantitativas])}
+\NormalTok{test\_clean }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(test[, cuantitativas])}
+
+\NormalTok{x\_train }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(train\_clean[, }\FunctionTok{setdiff}\NormalTok{(cuantitativas, }\StringTok{"price"}\NormalTok{)])}
+\NormalTok{y\_train }\OtherTok{\textless{}{-}}\NormalTok{ train\_clean}\SpecialCharTok{$}\NormalTok{price}
+
+\NormalTok{x\_test }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(test\_clean[, }\FunctionTok{setdiff}\NormalTok{(cuantitativas, }\StringTok{"price"}\NormalTok{)])}
+\NormalTok{y\_test }\OtherTok{\textless{}{-}}\NormalTok{ test\_clean}\SpecialCharTok{$}\NormalTok{price}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{) }
+\NormalTok{cv\_lasso }\OtherTok{\textless{}{-}} \FunctionTok{cv.glmnet}\NormalTok{(x\_train, y\_train, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{)}
+\NormalTok{best\_lambda }\OtherTok{\textless{}{-}}\NormalTok{ cv\_lasso}\SpecialCharTok{$}\NormalTok{lambda.min}
+
+\NormalTok{model\_lasso }\OtherTok{\textless{}{-}} \FunctionTok{glmnet}\NormalTok{(x\_train, y\_train, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{, }\AttributeTok{lambda =}\NormalTok{ best\_lambda)}
+
+\NormalTok{pred\_lasso }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(model\_lasso, }\AttributeTok{s =}\NormalTok{ best\_lambda, }\AttributeTok{newx =}\NormalTok{ x\_test)}
+\NormalTok{pred\_lasso }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(pred\_lasso) }
+
+\NormalTok{actual\_lasso }\OtherTok{\textless{}{-}}\NormalTok{ y\_test}
+
+\NormalTok{r2\_test }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(actual, predicted) \{}
+\NormalTok{  ss\_res }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((actual }\SpecialCharTok{{-}}\NormalTok{ predicted)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  ss\_tot }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((actual }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(actual, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+  \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ ss\_res }\SpecialCharTok{/}\NormalTok{ ss\_tot}
+\NormalTok{\}}
+
+\NormalTok{results\_lasso }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Modelo =} \FunctionTok{c}\NormalTok{(}\StringTok{"Regresión Lasso (Regularización)"}\NormalTok{),}
+  \AttributeTok{RMSE =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{    caret}\SpecialCharTok{::}\FunctionTok{RMSE}\NormalTok{(pred\_lasso, actual\_lasso)}
+\NormalTok{  ),}
+  \AttributeTok{R2 =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{r2\_test}\NormalTok{(actual\_lasso, pred\_lasso)}
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{results\_lasso}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             Modelo     RMSE        R2
+## 1 Regresión Lasso (Regularización) 111.9871 0.5300248
+\end{verbatim}
+
+¿Por que escogimos lasso?
+
+En bases de datos de viviendas suele haber muchas variables numéricas
+que miden cosas similares. Lasso aplica un tipo de castigo matemático
+llamado ``penalización L1''. Lo especial de esta penalización es que, si
+una variable no aporta valor real para predecir el precio, Lasso reduce
+su coeficiente exactamente a cero, eliminándola del modelo por completo.
+
+\subsection{12. Utilice cada modelo con el conjunto de prueba
+(Brandon)}\label{utilice-cada-modelo-con-el-conjunto-de-prueba-brandon}
+
+Determine la eficiencia del algoritmo para predecir el precio de las
+casas. ¿Qué tan bien lo hizo? ¿Qué medidas usó para determinar la
+calidad de la predicción?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r2\_test }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(actual, predicted) \{}
+\NormalTok{  ss\_res }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((actual }\SpecialCharTok{{-}}\NormalTok{ predicted)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  ss\_tot }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((actual }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(actual, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+  \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ ss\_res }\SpecialCharTok{/}\NormalTok{ ss\_tot}
+\NormalTok{\}}
+
+\CommentTok{\# Remove NA values for fair comparison}
+\NormalTok{valid\_idx }\OtherTok{\textless{}{-}} \FunctionTok{complete.cases}\NormalTok{(pred\_full, actual\_full)}
+\NormalTok{pred\_full\_valid }\OtherTok{\textless{}{-}}\NormalTok{ pred\_full[valid\_idx]}
+\NormalTok{actual\_full\_valid }\OtherTok{\textless{}{-}}\NormalTok{ actual\_full[valid\_idx]}
+
+\NormalTok{results\_full }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Modelo =} \FunctionTok{c}\NormalTok{(}\StringTok{"Regresión Lineal Completa"}\NormalTok{),}
+  \AttributeTok{RMSE =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{    caret}\SpecialCharTok{::}\FunctionTok{RMSE}\NormalTok{(pred\_full\_valid, actual\_full\_valid)}
+\NormalTok{  ),}
+  \AttributeTok{R2 =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{r2\_test}\NormalTok{(actual\_full\_valid, pred\_full\_valid)}
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{results\_full}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                      Modelo     RMSE        R2
+## 1 Regresión Lineal Completa 112.0029 0.5298918
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{valid\_idx\_single }\OtherTok{\textless{}{-}} \FunctionTok{complete.cases}\NormalTok{(pred\_full\_single, actual\_full\_single)}
+\NormalTok{pred\_single\_valid }\OtherTok{\textless{}{-}}\NormalTok{ pred\_full\_single[valid\_idx\_single]}
+\NormalTok{actual\_single\_valid }\OtherTok{\textless{}{-}}\NormalTok{ actual\_full\_single[valid\_idx\_single]}
+
+\NormalTok{results\_single }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Modelo =} \FunctionTok{c}\NormalTok{(}\StringTok{"Regresión Lineal Univariada"}\NormalTok{),}
+  \AttributeTok{RMSE =} \FunctionTok{c}\NormalTok{(}
+\NormalTok{    caret}\SpecialCharTok{::}\FunctionTok{RMSE}\NormalTok{(pred\_single\_valid, actual\_single\_valid)}
+\NormalTok{  ),}
+  \AttributeTok{R2 =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{r2\_test}\NormalTok{(actual\_single\_valid, pred\_single\_valid)}
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{results\_single}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                        Modelo    RMSE        R2
+## 1 Regresión Lineal Univariada 150.646 0.2576685
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_comparativa }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(results\_single, results\_full, results\_lasso)}
+\NormalTok{tabla\_comparativa}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             Modelo     RMSE        R2
+## 1      Regresión Lineal Univariada 150.6460 0.2576685
+## 2        Regresión Lineal Completa 112.0029 0.5298918
+## 3 Regresión Lasso (Regularización) 111.9871 0.5300248
+\end{verbatim}
+
+Cada uno de los modelos tuvo un RMSE de alrededor de 110 a 150 y un R2
+de alrededor de 0.26 a 0.53, lo que indica que los modelos explican
+entre el 25\% y el 53\% de la variabilidad en los precios de las casas.
+El modelo de regresión lineal completa tiene un mejor desempeño que el
+univariado, pero el modelo Lasso no muestra una mejora significativa en
+comparación con la regresión lineal completa, lo que sugiere que la
+regularización no aportó beneficios adicionales en este caso.
+
+Por otro lado al haber obtenido un valor RMSE de alrededor de 110 a 150,
+esto indica que en promedio, las predicciones del modelo se desvían del
+precio real en esa cantidad, lo que sugiere que el modelo tiene un error
+considerable pero muy aceptable en sus predicciones.
+
+\subsection{13. Discuta sobre la efectividad de los modelos.
+(Pedro)}\label{discuta-sobre-la-efectividad-de-los-modelos.-pedro}
+
+¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de
+las casas? Haga los gráficos que crea que le pueden ayudar en la
+discusión.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tabla\_comparativa, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Modelo, }\AttributeTok{y =}\NormalTok{ RMSE, }\AttributeTok{fill =}\NormalTok{ Modelo)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Comparación del RMSE entre modelos"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Modelo"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"RMSE"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-27-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(tabla\_comparativa, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Modelo, }\AttributeTok{y =}\NormalTok{ R2, }\AttributeTok{fill =}\NormalTok{ Modelo)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Comparación del R² entre modelos"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Modelo"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"R\^{}2"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Lab3_files/figure-latex/unnamed-chunk-27-2.pdf}}
+El modelo con peor desempeño es la regresión lineal univariada, ya que
+presenta el RMSE más alto (150.646) y el R² más bajo (0.2577). Esto
+indica que solo explica aproximadamente el 25.7\% de la variabilidad en
+los precios de las casas, por lo que su capacidad predictiva es
+limitada. Esto se debe a que utiliza una sola variable para hacer las
+predicciones, lo que no logra capturar todos los factores que influyen
+en el precio de las viviendas.
+
+En cambio, la regresión lineal completa y la regresión Lasso muestran un
+desempeño mucho mejor, con un RMSE cercano a 112 y un R\^{}2 alrededor
+de 0.53, lo que significa que explican cerca del 53\% de la variabilidad
+del precio. El modelo Lasso tiene el RMSE ligeramente más bajo
+(111.9871) y el R\^{}2 ligeramente más alto (0.5300), por lo que puede
+considerarse el mejor modelo, aunque la diferencia con la regresión
+lineal completa es mínima.
+
+\end{document}

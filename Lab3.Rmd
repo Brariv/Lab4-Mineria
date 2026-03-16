@@ -2,7 +2,8 @@
 title: "Lab3"
 author: "Pedro Avila, Javier Benitez, Brandon Rivera"
 date: "2026-03-13"
-output: html_document
+output:
+  html_document: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -19,6 +20,7 @@ library(factoextra)
 library(hopkins)
 library(NbClust)
 library(glmnet)
+library(car)
 ```
 
 ## 1. Descargue el conjunto de datos.
@@ -527,7 +529,44 @@ actual_full <- test$price
 Determine si hay multicolinealidad entre las variables, y cuáles son las que aportan al modelo. Haga un análisis de correlación de las características del modelo y especifique si el modelo se
 adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no. En caso de existir sobreajuste, haga otro modelo que lo corrija.
 
+
+```{r}
+vif(model_full)
+
+cor_matrix_model <- cor(train[, cuantitativas], use = "complete.obs")
+
+
+corrplot(cor_matrix_model,
+         method = "color",
+         type = "upper",
+         tl.col = "black",
+         tl.srt = 45,
+         tl.cex = 0.3,
+         addCoef.col = NULL)
+
+```
+
+
+
+El análisis de multicolinealidad mostró que varias variables presentan valores altos de VIF, especialmente las relacionadas con la disponibilidad (availability_90, availability_eoy) y los conteos de propiedades del host (calculated_host_listings_count), indicando fuerte colinealidad entre ellas. Esto afecta la estabilidad e interpretación del modelo completo. El corrplot confirma estas relaciones altas entre variables similares. Aunque no se observa un sobreajuste severo al comparar con el modelo Lasso, es recomendable simplificar el modelo eliminando variables redundantes para mejorar su robustez y facilitar su interpretación.
+
 ## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo gráficamente. (Pedro)
+
+```{r}
+model_reduced <- lm(price ~ accommodates + bedrooms + beds + bathrooms,
+                    data = train)
+
+summary(model_reduced)
+
+plot(model_reduced$fitted.values,
+     resid(model_reduced),
+     main = "Residuos vs Valores Ajustados",
+     xlab = "Valores Ajustados",
+     ylab = "Residuos")
+
+abline(h = 0, col = "red", lwd = 2)
+```
+Se construyó un modelo reducido con las variables accommodates, bedrooms, beds y bathrooms, que son los mejores predictores identificados. Este modelo explica alrededor del 36% de la variabilidad del precio y todos sus coeficientes son significativos. Sin embargo, el análisis de residuos muestra heterocedasticidad, ya que la dispersión de errores aumenta con los valores ajustados. Esto indica que la varianza de los errores no es constante y sugiere que podrían usarse transformaciones o métodos robustos para mejorar el modelo. A pesar de ello, el modelo reducido representa una mejora en estabilidad y simplicidad frente al modelo completo con multicolinealidad.
 
 ## 11. Elabore un modelo en el que utilice al menos una de las técnicas de regularización 
 (Ridge, Lasso, ElasticNet) compare los resultados con los otros modelos.
@@ -635,3 +674,24 @@ lo que sugiere que el modelo tiene un error considerable pero muy aceptable en s
 ## 13. Discuta sobre la efectividad de los modelos. (Pedro)
 ¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de las casas? Haga los gráficos que crea que le pueden ayudar en la discusión.
 
+```{r}
+
+ggplot(tabla_comparativa, aes(x = Modelo, y = RMSE, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Comparación del RMSE entre modelos",
+       x = "Modelo",
+       y = "RMSE") +
+  theme(legend.position = "none")
+
+ggplot(tabla_comparativa, aes(x = Modelo, y = R2, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Comparación del R² entre modelos",
+       x = "Modelo",
+       y = "R^2") +
+  theme(legend.position = "none")
+```
+El modelo con peor desempeño es la regresión lineal univariada, ya que presenta el RMSE más alto (150.646) y el R² más bajo (0.2577). Esto indica que solo explica aproximadamente el 25.7% de la variabilidad en los precios de las casas, por lo que su capacidad predictiva es limitada. Esto se debe a que utiliza una sola variable para hacer las predicciones, lo que no logra capturar todos los factores que influyen en el precio de las viviendas.
+
+En cambio, la regresión lineal completa y la regresión Lasso muestran un desempeño mucho mejor, con un RMSE cercano a 112 y un R^2 alrededor de 0.53, lo que significa que explican cerca del 53% de la variabilidad del precio. El modelo Lasso tiene el RMSE ligeramente más bajo (111.9871) y el R^2 ligeramente más alto (0.5300), por lo que puede considerarse el mejor modelo, aunque la diferencia con la regresión lineal completa es mínima.

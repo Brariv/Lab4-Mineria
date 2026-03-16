@@ -20,6 +20,7 @@
           packages =
             with pkgs.rPackages;
             [
+              car
               ggplot2
               caret
               lmtest
