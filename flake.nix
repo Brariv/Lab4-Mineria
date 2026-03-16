@@ -21,10 +21,16 @@
             with pkgs.rPackages;
             [
               ggplot2
+              caret
+              lmtest
+              stringi
               dplyr
               nortest
               scales
               lubridate
+              NbClust
+              glmnet
+              hopkins
               cluster
               factoextra
               arules

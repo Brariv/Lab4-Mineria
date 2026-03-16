@@ -4,34 +4,40 @@ author: "Pedro Avila, Javier Benitez, Brandon Rivera"
 date: "2026-03-13"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r message=FALSE, warning=FALSE}
+library(corrplot)
+library(caret)
+library(lmtest)
+library(dplyr)
+library(stringi)
+library(cluster)
+library(factoextra)
+library(hopkins)
+library(NbClust)
+library(glmnet)
+```
 
+## 1. Descargue el conjunto de datos.
 
-## Cargar datos
 ```{r}
 load("Listings.RData")
 
 head(listings, 5)
-
-summary(listings)
 ```
 
-## Lab 3 Avances
 
+## 2. Haga un análisis exploratorio extenso de los datos. 
+Explique bien todos los hallazgos. No ponga solo gráficas y código. Debe llegar a conclusiones interesantes para poder predecir. Explique el
+preprocesamiento que necesitó hacer
 
-calendar_last_scraped number_of_reviews number_of_reviews_ltm number_of_reviews_l30d
- availability_eoy number_of_reviews_ly estimated_occupancy_l365d estimated_revenue_l365d first_review         
- last_review        review_scores_rating review_scores_accuracy review_scores_cleanliness review_scores_checkin  
- review_scores_communication review_scores_location review_scores_value   license          instant_bookable   
- calculated_host_listings_count calculated_host_listings_count_entire_homes calculated_host_listings_count_private_rooms  
- calculated_host_listings_count_shared_rooms reviews_per_month     city         
-
-
-### 1. Descripción de las variables
+### 2.1. Descripción de las variables
+```{r datasummary}
+summary(listings)
+```
 
 ```{r}
 cual_nominales <- c(
@@ -74,8 +80,7 @@ cual_ordinales <- c(
     "last_review"
 )
 
-# Variables cuantitativas discretas que irian aqui pero no las voy a poner
-# id , scrape_id , host_id 
+
 cuant_discretas <- c(
     "host_listings_count",
     "host_total_listings_count",
@@ -134,11 +139,11 @@ cualitativas
 datos_cual <- listings[, cualitativas]
 head(datos_cual, 5)
 ```
+Variables cuantitativas discretas no decidimos clasificarlas id , scrape_id , host_id.
+Adicionalmente la variable calendar_updated se decidio no incluirla ya que toda su data es NA
 
-
-### 2. Análisis exploratorio
-
-```{r}
+### 2.2. Análisis exploratorio
+```{r message=FALSE, warning=FALSE}
 
 library(ggplot2)
 
@@ -172,18 +177,455 @@ ggplot(listings, aes(y = price)) +
 
 ggplot(listings, aes(y = reviews_per_month)) +
   geom_boxplot()
-
 ```
+
 Podemos ver que los datos los cuales principalmente podriamos hacer analisis 
 numerico llegan a tener sesgos cada uno por su lado
-
 ```{r}
 shapiro.test(sample(na.omit(listings$price), 5000))
 shapiro.test(sample(na.omit(listings$review_scores_rating), 5000))
 shapiro.test(sample(na.omit(listings$reviews_per_month), 5000))
-
 ```
 Haciendo la prueba de shapiro-wilks podemos darnos cuenta por que el p-value 
 llega a estar mas abajo que el alpha autoimpuesto de 0.5, podemos darnos cuenta
 que no es normal.
-### 3. Análisis de relaciones con la variable respuesta
+
+### 2.3. Análisis de relaciones con la variable respuesta
+
+```{r message=FALSE, warning=FALSE}
+library(corrplot)
+
+vars_interes <- c("price", "accommodates", "bedrooms", "beds", "bathrooms",
+                  "review_scores_rating", "reviews_per_month",
+                  "availability_365", "estimated_occupancy_l365d",
+                  "estimated_revenue_l365d", "number_of_reviews")
+
+cor_data <- listings[, vars_interes]
+cor_data <- cor_data[complete.cases(cor_data), ]
+
+cor_matrix <- cor(cor_data)
+
+corrplot(cor_matrix, method = "color", type = "upper",
+         addCoef.col = "black", tl.col = "black", tl.srt = 45,
+         mar = c(0,0,1,0))
+```
+
+Las variables `accommodates`, `bedrooms`, `beds` y `bathrooms` tienen la mayor correlación positiva con `price`. Las variables de reseñas y ocupación muestran correlaciones débiles.
+```{r}
+par(mfrow = c(2, 2))
+
+plot(listings$accommodates, listings$price,
+     main = "Price vs Accommodates",
+     xlab = "Capacidad", ylab = "Precio")
+abline(lm(price ~ accommodates, data = listings), col = "black", lwd = 2)
+
+plot(listings$bedrooms, listings$price,
+     main = "Price vs Bedrooms",
+     xlab = "Habitaciones", ylab = "Precio")
+abline(lm(price ~ bedrooms, data = listings), col = "black", lwd = 2)
+
+plot(listings$bathrooms, listings$price,
+     main = "Price vs Bathrooms",
+     xlab = "Baños", ylab = "Precio")
+abline(lm(price ~ bathrooms, data = listings), col = "black", lwd = 2)
+
+plot(listings$review_scores_rating, listings$price,
+     main = "Price vs Review Score",
+     xlab = "Calificación", ylab = "Precio")
+abline(lm(price ~ review_scores_rating, data = listings), col = "black", lwd = 2)
+
+par(mfrow = c(1, 1))
+```
+
+A mayor tamaño de la propiedad, mayor precio. La calificación no muestra relación clara con el precio.
+```{r}
+boxplot(price ~ room_type, data = listings,
+        main = "Precio por tipo de habitación",
+        xlab = "Tipo", ylab = "Precio",
+        ylim = c(0, 500))
+
+kruskal.test(price ~ room_type, data = listings)
+```
+
+Los alojamientos completos tienen precios más altos. Kruskal-Wallis confirma que las diferencias son significativas (p < 0.05).
+```{r}
+boxplot(price ~ city, data = listings,
+        main = "Precio por ciudad",
+        xlab = "Ciudad", ylab = "Precio",
+        ylim = c(0, 500),
+        las = 2)
+
+kruskal.test(price ~ city, data = listings)
+```
+
+El precio varía según la ciudad, siendo la ubicación un factor relevante (p < 0.05).
+
+Conclusión: Los mejores predictores del precio son `accommodates`, `bedrooms`, `bathrooms`, `room_type` y `city`.
+
+
+## 3. Incluya un análisis de grupos en el análisis exploratorio. (Javi)
+Explique las características de cada uno.
+
+Clustering
+
+```{r}
+set.seed(123)
+
+vars_cluster <- c("price", "accommodates", "bedrooms", "beds", 
+                  "bathrooms", "review_scores_rating", 
+                  "availability_365", "estimated_occupancy_l365d")
+
+datos_cluster <- listings[, vars_cluster]
+datos_cluster <- datos_cluster[complete.cases(datos_cluster), ]
+
+# Tomar muestra representativa (máximo 3000-5000 filas)
+n_muestra <- min(3000, nrow(datos_cluster))
+idx_muestra <- sample(1:nrow(datos_cluster), n_muestra)
+datos_muestra <- datos_cluster[idx_muestra, ]
+
+# Escalar
+datos_scaled <- scale(datos_muestra[, vars_cluster])
+
+### Hopkins
+set.seed(123)
+
+idx_hopkins <- sample(1:nrow(datos_scaled), 500)
+hopkins(datos_scaled[idx_hopkins, ])
+
+# Codo - rápido
+fviz_nbclust(datos_scaled, kmeans, 
+             method = "wss",
+             k.max = 8) +
+  labs(title = "Método del Codo")
+
+# Silueta - rápido
+fviz_nbclust(datos_scaled, kmeans, 
+             method = "silhouette",
+             k.max = 8) +
+  labs(title = "Método de Silueta")
+
+
+```
+
+```{r}
+set.seed(123)
+k_optimo <- 2
+
+km <- kmeans(datos_scaled, 
+             centers = k_optimo, 
+             iter.max = 100, 
+             nstart = 10)   # reducir nstart también ayuda
+
+datos_muestra$grupo <- as.factor(km$cluster)
+
+fviz_cluster(km, data = datos_scaled,
+             geom = "point",
+             ellipse.type = "norm") +
+  labs(title = "Clusters de propiedades Airbnb")
+```
+
+```{r}
+library(dplyr)
+
+perfil <- datos_muestra %>%
+  group_by(grupo) %>%
+  summarise(across(all_of(vars_cluster), mean, na.rm = TRUE)) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+
+print(perfil)
+
+```
+```{r}
+ggplot(datos_muestra, aes(x = grupo, y = price, fill = grupo)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 500)) +
+  labs(title = "Precio por grupo", x = "Grupo", y = "Precio") +
+  theme_minimal()
+
+kruskal.test(price ~ grupo, data = datos_muestra)
+
+```
+
+
+
+## 4. Divida el set de datos preprocesados (Brandon)
+Dividalos en dos conjuntos: Entrenamiento y prueba. Describa el criterio que usó para crear los conjuntos: número de filas de cada uno, estratificado o no, balanceado o no, etc.
+```{r train test}
+set.seed(123)
+
+pricing_without_na <- listings[!is.na(listings$price), ]
+
+trainIndex <- createDataPartition(pricing_without_na$price, p = .7, list = FALSE)
+train <- pricing_without_na[trainIndex, ]
+test <- pricing_without_na[-trainIndex, ]
+```
+
+Tratamiento de outliers en 'price' (IQR) sin perder filas:
+En vez de eliminar registros (lo que puede dejar 0 casos para entrenar),
+recortamos (winsorizamos) el precio a los límites IQR calculados en TRAIN.
+[Esta seccion del codigo fue Generado por ChatGPT para ayudarnos a limpiar los outliers sin perder filas]
+[El resto del codigo es nuestro tomando en base el repositorio de erick]
+
+```{r outliers-price-iqr}
+
+Q1 <- quantile(train$price, 0.25, na.rm = TRUE)
+Q3 <- quantile(train$price, 0.75, na.rm = TRUE)
+IQR_value <- Q3 - Q1
+
+low  <- as.numeric(Q1 - 1.5 * IQR_value)
+high <- as.numeric(Q3 + 1.5 * IQR_value)
+
+cat("IQR bounds price (train):", low, "to", high, "\n")
+cat("Rows before -> train:", nrow(train), ", test:", nrow(test), "\n")
+
+# Clip/Winsorize
+train$price <- pmin(pmax(train$price, low), high)
+test$price  <- pmin(pmax(test$price,  low), high)
+
+cat("Rows after  -> train:", nrow(train), ", test:", nrow(test), "\n")
+cat("NA counts -> price/train:", sum(is.na(train$price)), ", bedrooms/train:", sum(is.na(train$bedrooms)), "\n")
+```
+Entrenamos con el 70% de los datos y probamos con el 30% restante. La partición se hizo de manera estratificada para mantener la distribución del precio en ambos conjuntos. Luego, se aplicó un recorte (winsorización) de outliers en `price` con límites IQR calculados en entrenamiento, para reducir el impacto de valores extremos sin eliminar observaciones.
+
+## 5. Haga ingeniería de características (Brandon)
+¿qué variables cree que puedan ser mejores predictores para el precio de las casas? Explique en que basó la selección o no de las variables.
+
+### Prueba de Supuestos
+Nuestros supuestos son los siguientes:
+1. Los cuatros (bedrooms) son linealmente relacionados con el precio.
+2. Los baños (bathrooms) son linealmente relacionados con el precio.
+3. La calificación de las reseñas (review_scores_rating) es linealmente relacionada con el precio.
+```{r}
+train_bedrooms <- train[complete.cases(train[, c("price", "bedrooms")]), ]
+train_bathrooms <- train[complete.cases(train[, c("price", "bathrooms")]), ]
+train_reviews <- train[complete.cases(train[, c("price", "review_scores_rating")]), ]
+
+model_bedrooms <- lm(price ~ bedrooms, data = train_bedrooms)
+model_bathrooms <- lm(price ~ bathrooms, data = train_bathrooms)
+model_ReviewScore <- lm(price ~ review_scores_rating, data = train_reviews)
+```
+
+
+### Linealidad
+Podemos observar que los residuos no muestran un patrón claro, lo que sugiere que la relación entre las variables independientes y el precio es aproximadamente lineal. Sin embargo, hay cierta dispersión en los residuos, lo que podría indicar que la relación no es perfectamente lineal.
+```{r}
+par(mfrow = c(1, 3))
+plot(
+  fitted(model_bedrooms),
+  resid(model_bedrooms),
+  main = "Linealidad - Bedrooms"
+)
+abline(h = 0, col = "red")
+
+plot(
+  fitted(model_bathrooms),
+  resid(model_bathrooms),
+  main = "Linealidad - Bathrooms"
+)
+abline(h = 0, col = "red")
+
+plot(
+  fitted(model_ReviewScore),
+  resid(model_ReviewScore),
+  main = "Linealidad - Review Score"
+)
+abline(h = 0, col = "red")
+par(mfrow = c(1, 1))
+```
+
+### Normalidad de los residuos
+Segun la prueba de Shapiro-Wilk, los residuos de los modelos no siguen una distribución normal, lo que podría afectar la validez de las inferencias basadas en estos modelos. 
+Sin embargo, dado el tamaño de la muestra, es posible que esta falta de normalidad no tenga un impacto significativo en la capacidad predictiva del modelo.
+Muy seguramente, la falta de normalidad se deba a la presencia de valores atípicos o a una distribución sesgada de los residuos, lo que es común en datos de precios.
+
+Regla de decisión:
+* Si p-value ≤ 0.05 → Se rechaza H₀ (evidencia de no normalidad).
+
+```{r}
+sample_resid_bedrooms <- sample(resid(model_bedrooms), 5000)
+sample_resid_bathrooms <- sample(resid(model_bathrooms), 5000)
+sample_resid_ReviewScore <- sample(resid(model_ReviewScore), 5000)
+
+shapiro.test(sample_resid_bedrooms)
+shapiro.test(sample_resid_bathrooms)
+shapiro.test(sample_resid_ReviewScore)
+```
+
+Hipótesis:
+
+* H₀: Los residuos no siguen una distribución normal.
+* H₁: Los residuos siguen una distribución normal.
+
+
+### Homocedasticidad
+Observamos que en nuestro caso de Review Score, los residuos muestran una mayor dispersión a medida que aumentan los valores ajustados, 
+lo que sugiere la presencia de heterocedasticidad. 
+En los casos de Bedrooms y Bathrooms, la dispersión de los residuos parece ser más constante, 
+aunque también muestra cierta variabilidad.
+
+Regla de decisión:
+* Si p-value > 0.05 → No se rechaza H₀ (varianza constante).
+* Si p-value ≤ 0.05 → Se rechaza H₀ (existe heterocedasticidad).
+```{r}
+bptest(model_bedrooms)
+bptest(model_bathrooms)
+bptest(model_ReviewScore)
+```
+
+Hipótesis:
+
+* H₀: La varianza de los errores es constante (homocedasticidad).
+* H₁: La varianza de los errores no es constante (heterocedasticidad).
+
+
+### Independencia
+En el caso de todos los modelos, el valor de Durbin-Watson tiene un p value menor a 0.05, 
+lo que indica que hay evidencia de autocorrelación de primer orden en los residuos. 
+Esto sugiere que los errores no son independientes, 
+lo que podría afectar la validez de las inferencias basadas en estos modelos.
+* Si p-value ≤ 0.05 → Se rechaza H₀ (evidencia de autocorrelación).
+```{r}
+dwtest(model_bedrooms)
+dwtest(model_bathrooms)
+dwtest(model_ReviewScore)
+```
+
+Hipótesis:
+
+* H₀: No existe autocorrelación de primer orden en los residuos.
+* H₁: Existe autocorrelación de primer orden en los residuos.
+
+
+## 6. Todos los resultados deben ser reproducibles por lo que debe fijar que los conjuntos de entrenamiento y
+prueba sean los mismos siempre que se ejecute el código.
+
+## 7. Modelo univariado de regresión lineal (Javi)
+Seleccione una de las variables y haga un modelo univariado de regresión lineal para predecir el precio de
+las casas. Analice el modelo (resumen, residuos, resultados de la predicción). Muéstrelo gráficamente.
+
+```{r}
+model_single <- lm(price ~ bedrooms, data=train)
+summary(model_single)
+
+pred_full_single <- predict(model_single, newdata = test[, cuantitativas])
+actual_full_single <- test$price
+```
+
+
+## 8. Modelo de regresión lineal (Brandon)
+Haga un modelo de regresión lineal con todas las variables numéricas para predecir el precio de las casas.
+Analice el modelo (resumen, residuos, resultados de la predicción). Muestre el modelo gráficamente.
+```{r}
+model_full <- lm(price ~ ., data = train[, cuantitativas])
+summary(model_full)
+
+pred_full <- predict(model_full, newdata = test[, cuantitativas])
+actual_full <- test$price
+```
+
+## 9. Analice el modelo. (Pedro)
+Determine si hay multicolinealidad entre las variables, y cuáles son las que aportan al modelo. Haga un análisis de correlación de las características del modelo y especifique si el modelo se
+adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no. En caso de existir sobreajuste, haga otro modelo que lo corrija.
+
+## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo gráficamente. (Pedro)
+
+## 11. Elabore un modelo en el que utilice al menos una de las técnicas de regularización 
+(Ridge, Lasso, ElasticNet) compare los resultados con los otros modelos.
+
+```{r}
+train_clean <- na.omit(train[, cuantitativas])
+test_clean <- na.omit(test[, cuantitativas])
+
+x_train <- as.matrix(train_clean[, setdiff(cuantitativas, "price")])
+y_train <- train_clean$price
+
+x_test <- as.matrix(test_clean[, setdiff(cuantitativas, "price")])
+y_test <- test_clean$price
+
+set.seed(123) 
+cv_lasso <- cv.glmnet(x_train, y_train, alpha = 1)
+best_lambda <- cv_lasso$lambda.min
+
+model_lasso <- glmnet(x_train, y_train, alpha = 1, lambda = best_lambda)
+
+pred_lasso <- predict(model_lasso, s = best_lambda, newx = x_test)
+pred_lasso <- as.numeric(pred_lasso) 
+
+valid_idx_lasso <- complete.cases(pred_lasso, actual_lasso)
+pred_lasso_valid <- pred_lasso[valid_idx_lasso]
+actual_lasso_valid <- actual_lasso[valid_idx_lasso]
+
+results_lasso <- data.frame(
+  Modelo = c("Regresión Lasso (Regularización)"),
+  RMSE = c(
+    caret::RMSE(pred_lasso_valid, actual_lasso_valid)
+  ),
+  R2 = c(
+    r2_test(actual_lasso_valid, pred_lasso_valid)
+  )
+)
+
+results_lasso
+
+tabla_comparativa <- rbind(results_single, results_full, results_lasso)
+tabla_comparativa
+```
+
+¿Por que escogimos lasso? 
+
+En bases de datos de viviendas suele haber muchas variables numéricas que miden cosas similares. Lasso aplica un tipo de castigo matemático llamado "penalización L1". Lo especial de esta penalización es que, si una variable no aporta valor real para predecir el precio, Lasso reduce su coeficiente exactamente a cero, eliminándola del modelo por completo.
+
+## 12. Utilice cada modelo con el conjunto de prueba (Brandon)
+Determine la eficiencia del algoritmo para predecir el precio de las casas. ¿Qué tan bien lo hizo? ¿Qué medidas usó para determinar la calidad de la predicción?
+```{r}
+r2_test <- function(actual, predicted) {
+  ss_res <- sum((actual - predicted)^2, na.rm = TRUE)
+  ss_tot <- sum((actual - mean(actual, na.rm = TRUE))^2, na.rm = TRUE)
+  1 - ss_res / ss_tot
+}
+
+# Remove NA values for fair comparison
+valid_idx <- complete.cases(pred_full, actual_full)
+pred_full_valid <- pred_full[valid_idx]
+actual_full_valid <- actual_full[valid_idx]
+
+results_full <- data.frame(
+  Modelo = c("Regresión Lineal Completa"),
+  RMSE = c(
+    caret::RMSE(pred_full_valid, actual_full_valid)
+  ),
+  R2 = c(
+    r2_test(actual_full_valid, pred_full_valid)
+  )
+)
+
+results_full
+```
+```{r}
+r2_test <- function(actual, predicted) {
+  ss_res <- sum((actual - predicted)^2, na.rm = TRUE)
+  ss_tot <- sum((actual - mean(actual, na.rm = TRUE))^2, na.rm = TRUE)
+  1 - ss_res / ss_tot
+}
+
+# Remover valores NA para una comparación justa en el modelo univariado
+valid_idx_single <- complete.cases(pred_full_single, actual_full_single)
+pred_single_valid <- pred_full_single[valid_idx_single]
+actual_single_valid <- actual_full_single[valid_idx_single]
+
+results_single <- data.frame(
+  Modelo = c("Regresión Lineal Univariada"),
+  RMSE = c(
+    caret::RMSE(pred_single_valid, actual_single_valid)
+  ),
+  R2 = c(
+    r2_test(actual_single_valid, pred_single_valid)
+  )
+)
+
+# Mostrar los resultados
+results_single
+```
+## 13. Discuta sobre la efectividad de los modelos. (Pedro)
+¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de las casas? Haga los gráficos que crea que le pueden ayudar en la discusión.
+

@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 .envrc/
 Lab3-Mineria.Rproj
 .Rproj.user
 .direnv
 .Rproj.user
+=======
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+>>>>>>> origin/main
