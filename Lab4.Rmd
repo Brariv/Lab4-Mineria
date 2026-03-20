@@ -695,3 +695,42 @@ ggplot(tabla_comparativa, aes(x = Modelo, y = R2, fill = Modelo)) +
 El modelo con peor desempeño es la regresión lineal univariada, ya que presenta el RMSE más alto (150.646) y el R² más bajo (0.2577). Esto indica que solo explica aproximadamente el 25.7% de la variabilidad en los precios de las casas, por lo que su capacidad predictiva es limitada. Esto se debe a que utiliza una sola variable para hacer las predicciones, lo que no logra capturar todos los factores que influyen en el precio de las viviendas.
 
 En cambio, la regresión lineal completa y la regresión Lasso muestran un desempeño mucho mejor, con un RMSE cercano a 112 y un R^2 alrededor de 0.53, lo que significa que explican cerca del 53% de la variabilidad del precio. El modelo Lasso tiene el RMSE ligeramente más bajo (111.9871) y el R^2 ligeramente más alto (0.5300), por lo que puede considerarse el mejor modelo, aunque la diferencia con la regresión lineal completa es mínima.
+
+# Lab 4 - Decision Tree
+
+## 1. Use los mismos conjuntos de entrenamiento
+Prueba que usó para los modelos de regresión lineal en la entrega anterior.
+
+## 2. árbol de regresión
+Elabore un árbol de regresión para predecir el precio de las casas por noche usando todas las variables.
+
+```{r}
+library(rpart)
+library(rpart.plot)
+set.seed(123)
+formula_tree <- as.formula(paste("price ~", paste(setdiff(cuantitativas, "price"), collapse = " + ")))
+tree_model <- rpart(formula_tree, data = train, method = "anova", control = rpart.control(cp = 0.01))
+rpart.plot(tree_model, main = "Árbol de Regresión para Predecir Precio")
+```
+
+
+## 3. Resultado arbol de regresión
+Úselo para predecir y analice el resultado. ¿Qué tal lo hizo?
+## 4. 3 modelos más cambiando la profundidad del árbol
+Haga, al menos, 3 modelos más, cambiando el parámetro de la profundidad del árbol. ¿Cuál es el mejor modelo para predecir el precio por noche?
+## 5. Comparación de modelos
+Compare los resultados con el modelo de regresión lineal de la hoja anterior, ¿cuál lo hizo mejor?
+## 6. Variable respuesta para clasificación
+Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar las casas en Económicas, Intermedias o Caras. Los límites de estas clases deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
+## 7. Arbol de clasificación
+Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde que la nueva variable respuesta es categórica, pero se generó a partir de los precios de las casas, no incluya el precio para entrenar el modelo.
+## 8. Eficiencia del árbol de clasificación
+Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar.
+## 9. Análisis de eficiencia
+Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
+## 10. Validación cruzada
+Entrene un modelo usando validación cruzada, prediga con él. ¿le fue mejor que al modelo anterior?
+## 11. Modelos adicionales
+Haga al menos, 3 modelos más, cambiando la profundidad del árbol. ¿Cuál funcionó mejor?
+## 12. Random Forest
+Repita los análisis usando random forest como algoritmo de predicción, explique sus resultados comparando ambos algoritmos.
