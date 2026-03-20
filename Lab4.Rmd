@@ -267,7 +267,7 @@ El precio varía según la ciudad, siendo la ubicación un factor relevante (p <
 Conclusión: Los mejores predictores del precio son `accommodates`, `bedrooms`, `bathrooms`, `room_type` y `city`.
 
 
-## 3. Incluya un análisis de grupos en el análisis exploratorio. (Javi)
+## 3. Incluya un análisis de grupos en el análisis exploratorio.
 Explique las características de cada uno.
 
 Clustering
@@ -352,7 +352,7 @@ kruskal.test(price ~ grupo, data = datos_muestra)
 
 
 
-## 4. Divida el set de datos preprocesados (Brandon)
+## 4. Divida el set de datos preprocesados
 Dividalos en dos conjuntos: Entrenamiento y prueba. Describa el criterio que usó para crear los conjuntos: número de filas de cada uno, estratificado o no, balanceado o no, etc.
 ```{r train test}
 set.seed(123)
@@ -391,7 +391,7 @@ cat("NA counts -> price/train:", sum(is.na(train$price)), ", bedrooms/train:", s
 ```
 Entrenamos con el 70% de los datos y probamos con el 30% restante. La partición se hizo de manera estratificada para mantener la distribución del precio en ambos conjuntos. Luego, se aplicó un recorte (winsorización) de outliers en `price` con límites IQR calculados en entrenamiento, para reducir el impacto de valores extremos sin eliminar observaciones.
 
-## 5. Haga ingeniería de características (Brandon)
+## 5. Haga ingeniería de características
 ¿qué variables cree que puedan ser mejores predictores para el precio de las casas? Explique en que basó la selección o no de las variables.
 
 ### Prueba de Supuestos
@@ -503,7 +503,7 @@ Hipótesis:
 ## 6. Todos los resultados deben ser reproducibles por lo que debe fijar que los conjuntos de entrenamiento y
 prueba sean los mismos siempre que se ejecute el código.
 
-## 7. Modelo univariado de regresión lineal (Javi)
+## 7. Modelo univariado de regresión lineal
 Seleccione una de las variables y haga un modelo univariado de regresión lineal para predecir el precio de
 las casas. Analice el modelo (resumen, residuos, resultados de la predicción). Muéstrelo gráficamente.
 
@@ -516,7 +516,7 @@ actual_full_single <- test$price
 ```
 
 
-## 8. Modelo de regresión lineal (Brandon)
+## 8. Modelo de regresión lineal
 Haga un modelo de regresión lineal con todas las variables numéricas para predecir el precio de las casas.
 Analice el modelo (resumen, residuos, resultados de la predicción). Muestre el modelo gráficamente.
 ```{r}
@@ -527,7 +527,7 @@ pred_full <- predict(model_full, newdata = test[, cuantitativas])
 actual_full <- test$price
 ```
 
-## 9. Analice el modelo. (Pedro)
+## 9. Analice el modelo.
 Determine si hay multicolinealidad entre las variables, y cuáles son las que aportan al modelo. Haga un análisis de correlación de las características del modelo y especifique si el modelo se
 adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no. En caso de existir sobreajuste, haga otro modelo que lo corrija.
 
@@ -552,7 +552,7 @@ corrplot(cor_matrix_model,
 
 El análisis de multicolinealidad mostró que varias variables presentan valores altos de VIF, especialmente las relacionadas con la disponibilidad (availability_90, availability_eoy) y los conteos de propiedades del host (calculated_host_listings_count), indicando fuerte colinealidad entre ellas. Esto afecta la estabilidad e interpretación del modelo completo. El corrplot confirma estas relaciones altas entre variables similares. Aunque no se observa un sobreajuste severo al comparar con el modelo Lasso, es recomendable simplificar el modelo eliminando variables redundantes para mejorar su robustez y facilitar su interpretación.
 
-## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo gráficamente. (Pedro)
+## 10. Si tiene multicolinealidad o sobreajuste, haga un modelo con las variables que sean mejores predictoras del precio de las casas. Determine la calidad del modelo realizando un análisis de los residuos. Muéstrelo gráficamente.
 
 ```{r}
 model_reduced <- lm(price ~ accommodates + bedrooms + beds + bathrooms,
@@ -617,7 +617,7 @@ results_lasso
 
 En bases de datos de viviendas suele haber muchas variables numéricas que miden cosas similares. Lasso aplica un tipo de castigo matemático llamado "penalización L1". Lo especial de esta penalización es que, si una variable no aporta valor real para predecir el precio, Lasso reduce su coeficiente exactamente a cero, eliminándola del modelo por completo.
 
-## 12. Utilice cada modelo con el conjunto de prueba (Brandon)
+## 12. Utilice cada modelo con el conjunto de prueba
 Determine la eficiencia del algoritmo para predecir el precio de las casas. ¿Qué tan bien lo hizo? ¿Qué medidas usó para determinar la calidad de la predicción?
 ```{r}
 r2_test <- function(actual, predicted) {
@@ -673,7 +673,7 @@ lo que sugiere que la regularización no aportó beneficios adicionales en este 
 Por otro lado al haber obtenido un valor RMSE de alrededor de 110 a 150, esto indica que en promedio, las predicciones del modelo se desvían del precio real en esa cantidad, 
 lo que sugiere que el modelo tiene un error considerable pero muy aceptable en sus predicciones.
 
-## 13. Discuta sobre la efectividad de los modelos. (Pedro)
+## 13. Discuta sobre la efectividad de los modelos.
 ¿Cuál lo hizo mejor? ¿Cuál es el mejor modelo para predecir el precio de las casas? Haga los gráficos que crea que le pueden ayudar en la discusión.
 
 ```{r}
@@ -709,17 +709,60 @@ Elabore un árbol de regresión para predecir el precio de las casas por noche u
 ```{r}
 set.seed(123)
 formula_tree <- as.formula(paste("price ~", paste(setdiff(cuantitativas, "price"), collapse = " + ")))
-tree_model <- rpart(formula_tree, data = train, method = "anova", control = rpart.control(cp = 0.01))
+tree_model <- rpart(formula_tree, data = train)
 rpart.plot(tree_model, main = "Árbol de Regresión para Predecir Precio")
 ```
 
-
 ## 3. Resultado arbol de regresión
 Úselo para predecir y analice el resultado. ¿Qué tal lo hizo?
+El arbol obtuvo un RMSE de alrededor de 130 y un R2 de alrededor de 0.45, lo que indica que el modelo explica aproximadamente el 45% de la variabilidad en los precios de las casas. 
+El rmse indica que, en promedio, las predicciones del árbol se desvían del precio real en alrededor de 120 unidades monetarias, lo que sugiere un error aceptable en sus predicciones.
+El modelo captura algunas relaciones no lineales entre las variables, pero puede estar limitado por la complejidad del árbol o por la presencia de ruido en los datos.
+```{r}
+pred_tree <- predict(tree_model, newdata = test)
+actual_tree <- test$price
+results_tree <- data.frame(
+  Modelo = c("Árbol de Regresión"),
+  RMSE = c(
+    caret::RMSE(pred_tree, actual_tree)
+  ),
+  R2 = c(
+    r2_test(actual_tree, pred_tree)
+  )
+)
+results_tree
+```
+
 ## 4. 3 modelos más cambiando la profundidad del árbol
 Haga, al menos, 3 modelos más, cambiando el parámetro de la profundidad del árbol. ¿Cuál es el mejor modelo para predecir el precio por noche?
+
+```{r}
+set.seed(123)
+depths <- c(3, 5, 7)
+results_depth <- data.frame()
+for (d in depths) {
+  tree_model_d <- rpart(formula_tree, data = train, control = rpart.control(maxdepth = d))
+  rpart.plot(tree_model_d, main = paste("Árbol de Regresión - maxdepth =", d))
+  pred_d <- predict(tree_model_d, newdata = test)
+  results_depth <- rbind(results_depth, data.frame(
+    Modelo = paste("Árbol maxdepth =", d),
+    RMSE = caret::RMSE(pred_d, actual_tree),
+    R2 = r2_test(actual_tree, pred_d)
+  ))
+}
+```
+
 ## 5. Comparación de modelos
 Compare los resultados con el modelo de regresión lineal de la hoja anterior, ¿cuál lo hizo mejor?
+Podemos observar que el modelo de regresión lineal de 7 y 5 niveles tiene un mejor desempeño que los árboles de regresión, 
+con un RMSE de alrededor de 129 y un R² de aproximadamente 0.45, mientras que los árboles de regresión con profundidades de 3 tienen RMSE más altos 
+(alrededor 132) y R² más bajos (alrededor de 0.42). 
+Esto sugiere que la regresión lineal completa es más efectiva para predecir el precio por noche en este conjunto de datos, 
+aunque los árboles pueden capturar relaciones no lineales, su capacidad predictiva es inferior en comparación con la regresión lineal en este caso específico.
+```{r}
+results_depth
+```
+
 ## 6. Variable respuesta para clasificación
 Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar las casas en Económicas, Intermedias o Caras. Los límites de estas clases deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
 ## 7. Arbol de clasificación
