@@ -21,6 +21,8 @@ library(hopkins)
 library(NbClust)
 library(glmnet)
 library(car)
+library(rpart)
+library(rpart.plot)
 ```
 
 ## 1. Descargue el conjunto de datos.
@@ -705,8 +707,6 @@ Prueba que usó para los modelos de regresión lineal en la entrega anterior.
 Elabore un árbol de regresión para predecir el precio de las casas por noche usando todas las variables.
 
 ```{r}
-library(rpart)
-library(rpart.plot)
 set.seed(123)
 formula_tree <- as.formula(paste("price ~", paste(setdiff(cuantitativas, "price"), collapse = " + ")))
 tree_model <- rpart(formula_tree, data = train, method = "anova", control = rpart.control(cp = 0.01))
