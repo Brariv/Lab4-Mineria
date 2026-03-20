@@ -329,8 +329,6 @@ fviz_cluster(km, data = datos_scaled,
 ```
 
 ```{r}
-library(dplyr)
-
 perfil <- datos_muestra %>%
   group_by(grupo) %>%
   summarise(across(all_of(vars_cluster), mean, na.rm = TRUE)) %>%
