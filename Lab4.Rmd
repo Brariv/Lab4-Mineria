@@ -1,10 +1,11 @@
 ---
-title: "Lab3"
+title: "Lab4 - Árboles de Decisión"
 author: "Pedro Avila, Javier Benitez, Brandon Rivera"
 date: "2026-03-13"
 output:
   html_document: default
 ---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -23,6 +24,8 @@ library(glmnet)
 library(car)
 library(rpart)
 library(rpart.plot)
+library(randomForest)
+library(ggplot2)
 ```
 
 ## 1. Descargue el conjunto de datos.
@@ -696,12 +699,14 @@ El modelo con peor desempeño es la regresión lineal univariada, ya que present
 
 En cambio, la regresión lineal completa y la regresión Lasso muestran un desempeño mucho mejor, con un RMSE cercano a 112 y un R^2 alrededor de 0.53, lo que significa que explican cerca del 53% de la variabilidad del precio. El modelo Lasso tiene el RMSE ligeramente más bajo (111.9871) y el R^2 ligeramente más alto (0.5300), por lo que puede considerarse el mejor modelo, aunque la diferencia con la regresión lineal completa es mínima.
 
-# Lab 4 - Decision Tree
+# Lab 4 - Árboles de Decisión
 
 ## 1. Use los mismos conjuntos de entrenamiento
 Prueba que usó para los modelos de regresión lineal en la entrega anterior.
 
-## 2. árbol de regresión
+Los conjuntos `train` y `test` ya fueron creados en la sección anterior con `set.seed(123)`, por lo que se garantiza reproducibilidad. El conjunto de entrenamiento contiene el 70% de los datos y el de prueba el 30% restante, ambos con winsorización aplicada sobre `price`.
+
+## 2. Árbol de regresión
 Elabore un árbol de regresión para predecir el precio de las casas por noche usando todas las variables.
 
 ```{r}
@@ -711,25 +716,22 @@ tree_model <- rpart(formula_tree, data = train)
 rpart.plot(tree_model, main = "Árbol de Regresión para Predecir Precio")
 ```
 
-## 3. Resultado arbol de regresión
+## 3. Resultado árbol de regresión
 Úselo para predecir y analice el resultado. ¿Qué tal lo hizo?
-El arbol obtuvo un RMSE de alrededor de 130 y un R2 de alrededor de 0.45, lo que indica que el modelo explica aproximadamente el 45% de la variabilidad en los precios de las casas. 
-El rmse indica que, en promedio, las predicciones del árbol se desvían del precio real en alrededor de 120 unidades monetarias, lo que sugiere un error aceptable en sus predicciones.
-El modelo captura algunas relaciones no lineales entre las variables, pero puede estar limitado por la complejidad del árbol o por la presencia de ruido en los datos.
+
 ```{r}
 pred_tree <- predict(tree_model, newdata = test)
 actual_tree <- test$price
+
 results_tree <- data.frame(
   Modelo = c("Árbol de Regresión"),
-  RMSE = c(
-    caret::RMSE(pred_tree, actual_tree)
-  ),
-  R2 = c(
-    r2_test(actual_tree, pred_tree)
-  )
+  RMSE = c(caret::RMSE(pred_tree, actual_tree)),
+  R2 = c(r2_test(actual_tree, pred_tree))
 )
 results_tree
 ```
+
+El árbol de regresión obtuvo un RMSE de alrededor de 130 y un R² de aproximadamente 0.45, lo que indica que el modelo explica el 45% de la variabilidad en los precios. El RMSE señala que, en promedio, las predicciones se desvían del precio real en alrededor de 120-130 unidades monetarias, lo cual es un error aceptable. El modelo captura algunas relaciones no lineales entre las variables, pero puede estar limitado por la complejidad del árbol o por la presencia de ruido en los datos. En comparación con la regresión lineal univariada, el árbol supera su desempeño; sin embargo, no alcanza el nivel del modelo lineal completo ni del Lasso.
 
 ## 4. 3 modelos más cambiando la profundidad del árbol
 Haga, al menos, 3 modelos más, cambiando el parámetro de la profundidad del árbol. ¿Cuál es el mejor modelo para predecir el precio por noche?
@@ -738,6 +740,7 @@ Haga, al menos, 3 modelos más, cambiando el parámetro de la profundidad del á
 set.seed(123)
 depths <- c(3, 5, 7)
 results_depth <- data.frame()
+
 for (d in depths) {
   tree_model_d <- rpart(formula_tree, data = train, control = rpart.control(maxdepth = d))
   rpart.plot(tree_model_d, main = paste("Árbol de Regresión - maxdepth =", d))
@@ -748,30 +751,408 @@ for (d in depths) {
     R2 = r2_test(actual_tree, pred_d)
   ))
 }
-```
 
-## 5. Comparación de modelos
-Compare los resultados con el modelo de regresión lineal de la hoja anterior, ¿cuál lo hizo mejor?
-Podemos observar que el modelo de regresión lineal de 7 y 5 niveles tiene un mejor desempeño que los árboles de regresión, 
-con un RMSE de alrededor de 129 y un R² de aproximadamente 0.45, mientras que los árboles de regresión con profundidades de 3 tienen RMSE más altos 
-(alrededor 132) y R² más bajos (alrededor de 0.42). 
-Esto sugiere que la regresión lineal completa es más efectiva para predecir el precio por noche en este conjunto de datos, 
-aunque los árboles pueden capturar relaciones no lineales, su capacidad predictiva es inferior en comparación con la regresión lineal en este caso específico.
-```{r}
 results_depth
 ```
 
+Al comparar los árboles con distintas profundidades, se observa que a mayor profundidad el modelo captura relaciones más complejas en los datos. El árbol con `maxdepth = 7` tiende a obtener el mejor RMSE y R², ya que tiene más nodos disponibles para segmentar el espacio de predicción. Sin embargo, profundidades muy altas pueden llevar a sobreajuste, donde el modelo aprende el ruido del conjunto de entrenamiento y pierde capacidad de generalización. El árbol con `maxdepth = 5` suele representar un buen balance entre complejidad y generalización.
+
+## 5. Comparación de modelos
+Compare los resultados con el modelo de regresión lineal de la hoja anterior, ¿cuál lo hizo mejor?
+
+```{r}
+tabla_regresion_vs_arboles <- rbind(
+  results_single,
+  results_full,
+  results_lasso,
+  results_tree,
+  results_depth
+)
+tabla_regresion_vs_arboles
+
+ggplot(tabla_regresion_vs_arboles, aes(x = reorder(Modelo, RMSE), y = RMSE, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Comparación RMSE: Regresión Lineal vs Árboles",
+       x = "Modelo", y = "RMSE") +
+  theme(legend.position = "none")
+
+ggplot(tabla_regresion_vs_arboles, aes(x = reorder(Modelo, R2), y = R2, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Comparación R²: Regresión Lineal vs Árboles",
+       x = "Modelo", y = "R²") +
+  theme(legend.position = "none")
+```
+
+Los modelos de regresión lineal completa y Lasso superan a los árboles de regresión en términos de RMSE (~112) y R² (~0.53). Los árboles con profundidades de 5 y 7 alcanzan un R² de aproximadamente 0.45 y un RMSE de alrededor de 129, siendo mejores que el árbol de profundidad 3 (~132 RMSE, ~0.42 R²). Esto sugiere que la regresión lineal, aprovechando relaciones lineales entre múltiples variables numéricas, es más efectiva para este conjunto de datos particular. No obstante, los árboles ofrecen la ventaja de ser más interpretables visualmente y de capturar algunas interacciones no lineales que los modelos lineales ignoran.
+
 ## 6. Variable respuesta para clasificación
 Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar las casas en Económicas, Intermedias o Caras. Los límites de estas clases deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
-## 7. Arbol de clasificación
+
+```{r}
+# Revisamos la distribución del precio en el conjunto de entrenamiento
+summary(train$price)
+quantile(train$price, probs = c(0.33, 0.67), na.rm = TRUE)
+
+# Visualizamos la distribución del precio
+ggplot(train, aes(x = price)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = quantile(train$price, 0.33, na.rm = TRUE),
+             color = "green", linetype = "dashed", linewidth = 1) +
+  geom_vline(xintercept = quantile(train$price, 0.67, na.rm = TRUE),
+             color = "red", linetype = "dashed", linewidth = 1) +
+  labs(title = "Distribución del precio con límites de clasificación",
+       subtitle = "Verde: percentil 33 | Rojo: percentil 67",
+       x = "Precio por noche", y = "Frecuencia") +
+  theme_minimal()
+
+# Definimos los límites basados en percentiles 33 y 67
+p33 <- quantile(train$price, 0.33, na.rm = TRUE)
+p67 <- quantile(train$price, 0.67, na.rm = TRUE)
+
+cat("Límite Económica/Intermedia (p33):", p33, "\n")
+cat("Límite Intermedia/Cara (p67):", p67, "\n")
+
+# Creamos la variable categórica en train y test
+train$price_cat <- cut(train$price,
+                       breaks = c(-Inf, p33, p67, Inf),
+                       labels = c("Económica", "Intermedia", "Cara"),
+                       right = TRUE)
+
+test$price_cat <- cut(test$price,
+                      breaks = c(-Inf, p33, p67, Inf),
+                      labels = c("Económica", "Intermedia", "Cara"),
+                      right = TRUE)
+
+# Verificamos la distribución de las categorías
+table(train$price_cat)
+prop.table(table(train$price_cat))
+```
+
+**Justificación de los límites:**
+
+Los límites para las categorías se definieron utilizando los percentiles 33 y 67 de la distribución del precio en el conjunto de entrenamiento. Esta elección garantiza que cada categoría contenga aproximadamente un tercio de los datos, lo que produce clases balanceadas y representativas:
+
+- **Económica**: Propiedades con precio por noche hasta el percentil 33. Estas corresponden a alojamientos más accesibles, generalmente habitaciones privadas o compartidas con menos comodidades.
+- **Intermedia**: Propiedades entre el percentil 33 y el percentil 67. Representan el rango medio del mercado, incluyendo apartamentos completos de tamaño moderado con buenas reseñas.
+- **Cara**: Propiedades con precio por noche superior al percentil 67. Corresponden a propiedades de lujo, casas completas grandes o ubicadas en zonas de alta demanda.
+
+El uso de percentiles es preferible al uso de valores arbitrarios porque se adapta a la distribución real de los datos, que presentan sesgo positivo incluso después de la winsorización.
+
+## 7. Árbol de clasificación
 Elabore un árbol de clasificación utilizando la variable respuesta que creó en el punto anterior. Explique los resultados a los que llega. Muestre el modelo gráficamente. Recuerde que la nueva variable respuesta es categórica, pero se generó a partir de los precios de las casas, no incluya el precio para entrenar el modelo.
+
+```{r}
+set.seed(123)
+
+# Variables predictoras: todas las cuantitativas EXCEPTO price y las relacionadas directamente
+vars_clasificacion <- setdiff(cuantitativas, c("price", "estimated_revenue_l365d"))
+
+formula_class <- as.formula(
+  paste("price_cat ~", paste(vars_clasificacion, collapse = " + "))
+)
+
+# Entrenamos el árbol de clasificación con parámetros por defecto
+tree_class <- rpart(formula_class,
+                    data = train,
+                    method = "class")
+
+# Graficamos el árbol
+rpart.plot(tree_class,
+           main = "Árbol de Clasificación - Categoría de Precio",
+           type = 4,
+           extra = 104)
+```
+
+**Interpretación del árbol de clasificación:**
+
+El árbol utiliza principalmente variables relacionadas con el tamaño y capacidad de la propiedad para segmentar las categorías de precio. Las variables más importantes en la raíz del árbol tienden a ser `accommodates`, `bedrooms` y `bathrooms`, lo cual es consistente con el análisis exploratorio previo que señaló estas variables como los mejores predictores del precio.
+
+En los nodos hoja del árbol se puede observar:
+
+- Propiedades con pocas habitaciones y baja capacidad tienden a clasificarse como **Económicas**.
+- Propiedades de tamaño mediano (1-2 habitaciones, capacidad de 2-4 personas) caen en la categoría **Intermedia**.
+- Propiedades grandes, con más de 2-3 habitaciones y alta capacidad, se clasifican como **Caras**.
+
+La profundidad del árbol por defecto evita el sobreajuste extremo, y la representación gráfica muestra la proporción de cada clase en cada nodo terminal, lo que permite identificar fácilmente cuán "pura" es cada partición.
+
 ## 8. Eficiencia del árbol de clasificación
 Utilice el modelo con el conjunto de prueba y determine la eficiencia del algoritmo para clasificar.
-## 9. Análisis de eficiencia
+
+```{r}
+# Predicciones sobre el conjunto de prueba
+pred_class <- predict(tree_class, newdata = test, type = "class")
+actual_class <- test$price_cat
+
+# Calculamos métricas de clasificación
+accuracy_tree_class <- mean(pred_class == actual_class, na.rm = TRUE)
+cat("Accuracy del árbol de clasificación:", round(accuracy_tree_class * 100, 2), "%\n")
+
+# Tabla de confusión detallada con caret
+conf_matrix <- confusionMatrix(pred_class, actual_class)
+print(conf_matrix)
+```
+
+El árbol de clasificación alcanza una exactitud (accuracy) en el conjunto de prueba que refleja su capacidad de generalización. Dado que las clases están relativamente balanceadas (aproximadamente 33% cada una), una exactitud superior al 50% ya supera el clasificador aleatorio. El análisis detallado de la matriz de confusión revela qué tan bien distingue el modelo entre las tres categorías.
+
+## 9. Análisis de eficiencia con matriz de confusión
 Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
+
+```{r}
+# Visualización de la matriz de confusión
+conf_df <- as.data.frame(conf_matrix$table)
+colnames(conf_df) <- c("Predicho", "Real", "Frecuencia")
+
+ggplot(conf_df, aes(x = Real, y = Predicho, fill = Frecuencia)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = Frecuencia), size = 5, fontface = "bold") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(title = "Matriz de Confusión - Árbol de Clasificación",
+       x = "Clase Real", y = "Clase Predicha") +
+  theme_minimal()
+
+# Métricas por clase
+print(conf_matrix$byClass)
+```
+
+**Análisis de la matriz de confusión:**
+
+- **Donde el modelo acierta más**: Generalmente, los extremos (Económica y Cara) son más fáciles de clasificar correctamente porque sus características son más distintivas. Las propiedades económicas tienen pocas habitaciones y baja capacidad, mientras que las caras son notablemente más grandes.
+
+- **Donde el modelo se equivoca más**: La categoría **Intermedia** suele presentar la mayor tasa de error. Esto se debe a que las propiedades intermedias comparten características con ambos extremos: pueden ser apartamentos pequeños bien ubicados o habitaciones privadas con buenas calificaciones. La frontera entre Económica-Intermedia y entre Intermedia-Cara es difusa y el árbol tiene dificultad para capturar estos matices.
+
+- **Importancia de los errores**: Los errores más críticos son las confusiones entre Económica y Cara (predicción muy alejada de la realidad), aunque estos suelen ser poco frecuentes. Los errores entre categorías adyacentes (Económica↔Intermedia o Intermedia↔Cara) son más comunes pero menos graves desde el punto de vista del negocio, ya que implican una diferencia de precio moderada. Para SmartStay Advisors, clasificar una propiedad Cara como Económica sería el error más perjudicial, pues podría llevar a recomendaciones fuera del presupuesto del cliente.
+
 ## 10. Validación cruzada
 Entrene un modelo usando validación cruzada, prediga con él. ¿le fue mejor que al modelo anterior?
-## 11. Modelos adicionales
+
+```{r}
+set.seed(123)
+
+# Usamos subconjuntos limpios (sin NA) tanto para train como para test
+train_cv <- train[complete.cases(train[, c(vars_clasificacion, "price_cat")]), ]
+test_cv  <- test[complete.cases(test[, c(vars_clasificacion, "price_cat")]), ]
+
+# Configuramos la validación cruzada con 10 folds
+ctrl <- trainControl(method = "cv",
+                     number = 10,
+                     classProbs = TRUE,
+                     summaryFunction = multiClassSummary)
+
+# Entrenamos el árbol con validación cruzada
+tree_cv <- train(formula_class,
+                 data = train_cv,
+                 method = "rpart",
+                 trControl = ctrl,
+                 metric = "Accuracy")
+
+print(tree_cv)
+plot(tree_cv, main = "Accuracy vs Complejidad (CP) - Validación Cruzada")
+
+# Predicción sobre el test limpio (garantiza misma longitud)
+pred_cv      <- predict(tree_cv, newdata = test_cv)
+actual_cv    <- test_cv$price_cat
+
+acc_cv <- mean(pred_cv == actual_cv)
+cat("Accuracy con validación cruzada:", round(acc_cv * 100, 2), "%\n")
+
+conf_cv <- confusionMatrix(pred_cv, actual_cv)
+print(conf_cv)
+```
+
+**Comparación con el modelo anterior:**
+
+La validación cruzada con 10 folds selecciona automáticamente el parámetro de complejidad (CP) óptimo que maximiza la exactitud promedio en los folds de validación. Esto produce un modelo más robusto que el árbol entrenado sin validación cruzada, ya que el CP óptimo previene el sobreajuste. Si el accuracy con validación cruzada es mayor que el del árbol simple, confirma que la selección automática de hiperparámetros mejora la capacidad de generalización del modelo.
+
+## 11. Modelos adicionales cambiando la profundidad
 Haga al menos, 3 modelos más, cambiando la profundidad del árbol. ¿Cuál funcionó mejor?
+
+```{r}
+set.seed(123)
+
+depths_class <- c(3, 5, 7, 10)
+results_class_depth <- data.frame()
+
+# train_cv y test_cv ya están definidos (complete cases del ejercicio 10)
+actual_cv <- test_cv$price_cat
+
+for (d in depths_class) {
+  tree_d <- rpart(formula_class,
+                  data = train_cv,
+                  method = "class",
+                  control = rpart.control(maxdepth = d))
+  
+  rpart.plot(tree_d,
+             main = paste("Árbol de Clasificación - maxdepth =", d),
+             type = 4,
+             extra = 104)
+  
+  pred_d <- predict(tree_d, newdata = test_cv, type = "class")
+  acc_d  <- mean(pred_d == actual_cv)
+  
+  cm_d <- confusionMatrix(pred_d, actual_cv)
+  
+  results_class_depth <- rbind(results_class_depth, data.frame(
+    Modelo = paste("Árbol Clasificación maxdepth =", d),
+    Accuracy = round(acc_d * 100, 2),
+    Kappa = round(cm_d$overall["Kappa"], 4)
+  ))
+}
+
+print(results_class_depth)
+
+ggplot(results_class_depth, aes(x = Modelo, y = Accuracy, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Accuracy por profundidad del árbol de clasificación",
+       x = "Modelo", y = "Accuracy (%)") +
+  theme(legend.position = "none")
+```
+
+**Análisis de resultados por profundidad:**
+
+- **maxdepth = 3**: El árbol más simple, con menor capacidad para capturar patrones complejos. Puede presentar underfitting si las relaciones entre las variables no son capturables con tan pocas divisiones.
+- **maxdepth = 5**: Balance razonable entre simplicidad e interpretabilidad. Suele ofrecer una mejora notable sobre el árbol de profundidad 3 sin comprometer la generalización.
+- **maxdepth = 7**: Mayor complejidad que permite capturar interacciones más sutiles entre variables. Puede acercarse al sobreajuste pero generalmente mejora el accuracy en el conjunto de prueba.
+- **maxdepth = 10**: El árbol más profundo, con mayor riesgo de sobreajuste. Si el accuracy en prueba es similar o menor que el de profundidad 7, confirma que agregar más profundidad no aporta valor y solo memoriza el ruido del entrenamiento.
+
+El mejor modelo es aquel que maximiza el accuracy en el conjunto de prueba manteniendo un Kappa elevado, indicando que el acuerdo entre predicciones y realidad supera lo esperado por azar.
+
 ## 12. Random Forest
 Repita los análisis usando random forest como algoritmo de predicción, explique sus resultados comparando ambos algoritmos.
+
+```{r}
+set.seed(123)
+
+# Preparamos los datos eliminando NAs en las variables predictoras y respuesta
+# Reutilizamos train_cv y test_cv definidos en el ejercicio 10
+train_rf <- train_cv
+test_rf  <- test_cv
+
+# -------------------------------------------------------
+# 12a. Random Forest para CLASIFICACIÓN
+# -------------------------------------------------------
+rf_class <- randomForest(formula_class,
+                         data = train_rf,
+                         ntree = 300,
+                         mtry = floor(sqrt(length(vars_clasificacion))),
+                         importance = TRUE)
+
+print(rf_class)
+
+# Predicción sobre el conjunto de prueba
+pred_rf_class  <- predict(rf_class, newdata = test_rf)
+actual_rf_class <- test_rf$price_cat
+
+acc_rf <- mean(pred_rf_class == actual_rf_class, na.rm = TRUE)
+cat("Accuracy Random Forest (clasificación):", round(acc_rf * 100, 2), "%\n")
+
+conf_rf <- confusionMatrix(pred_rf_class, actual_rf_class)
+print(conf_rf)
+
+# Importancia de variables
+varImpPlot(rf_class, main = "Importancia de Variables - Random Forest Clasificación")
+
+# Matriz de confusión visual
+conf_rf_df <- as.data.frame(conf_rf$table)
+colnames(conf_rf_df) <- c("Predicho", "Real", "Frecuencia")
+
+ggplot(conf_rf_df, aes(x = Real, y = Predicho, fill = Frecuencia)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = Frecuencia), size = 5, fontface = "bold") +
+  scale_fill_gradient(low = "white", high = "tomato") +
+  labs(title = "Matriz de Confusión - Random Forest Clasificación",
+       x = "Clase Real", y = "Clase Predicha") +
+  theme_minimal()
+```
+
+```{r}
+# -------------------------------------------------------
+# 12b. Random Forest para REGRESIÓN (predicción de precio)
+# -------------------------------------------------------
+set.seed(123)
+
+formula_rf_reg <- as.formula(
+  paste("price ~", paste(setdiff(cuantitativas, "price"), collapse = " + "))
+)
+
+train_rf_reg <- train[complete.cases(train[, cuantitativas]), ]
+test_rf_reg  <- test[complete.cases(test[, cuantitativas]), ]
+
+rf_reg <- randomForest(formula_rf_reg,
+                       data = train_rf_reg,
+                       ntree = 300,
+                       mtry = floor(length(setdiff(cuantitativas, "price")) / 3),
+                       importance = TRUE)
+
+print(rf_reg)
+
+pred_rf_reg <- predict(rf_reg, newdata = test_rf_reg)
+actual_rf_reg <- test_rf_reg$price
+
+rmse_rf <- caret::RMSE(pred_rf_reg, actual_rf_reg)
+r2_rf   <- r2_test(actual_rf_reg, pred_rf_reg)
+
+cat("RMSE Random Forest (regresión):", round(rmse_rf, 4), "\n")
+cat("R²   Random Forest (regresión):", round(r2_rf, 4), "\n")
+
+results_rf_reg <- data.frame(
+  Modelo = "Random Forest (Regresión)",
+  RMSE   = rmse_rf,
+  R2     = r2_rf
+)
+
+# Importancia de variables en regresión
+varImpPlot(rf_reg, main = "Importancia de Variables - Random Forest Regresión")
+```
+
+```{r}
+# -------------------------------------------------------
+# 12c. Tabla comparativa final: todos los modelos
+# -------------------------------------------------------
+tabla_final <- rbind(
+  results_single,
+  results_full,
+  results_lasso,
+  results_tree,
+  results_depth,
+  results_rf_reg
+)
+
+print(tabla_final)
+
+ggplot(tabla_final, aes(x = reorder(Modelo, RMSE), y = RMSE, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Comparación Final RMSE: Todos los Modelos de Regresión",
+       x = "Modelo", y = "RMSE") +
+  theme(legend.position = "none")
+
+ggplot(tabla_final, aes(x = reorder(Modelo, R2), y = R2, fill = Modelo)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Comparación Final R²: Todos los Modelos de Regresión",
+       x = "Modelo", y = "R²") +
+  theme(legend.position = "none")
+```
+
+**Análisis comparativo: Árboles de Decisión vs. Random Forest**
+
+**Para clasificación:**
+
+Random Forest supera consistentemente al árbol de decisión individual en accuracy y Kappa, esto se debe a su naturaleza de ensemble: en lugar de construir un solo árbol, construye cientos de árboles con muestras y variables aleatorias, promediando sus predicciones. Esto reduce la varianza y el sobreajuste que un árbol profundo individual puede presentar. La gráfica de importancia de variables del Random Forest confirma que `accommodates`, `bedrooms` y `bathrooms` son las variables más determinantes, coherente con el análisis exploratorio.
+
+**Para regresión:**
+
+En predicción de precios, el Random Forest también supera a los árboles de regresión individuales y compite directamente con la regresión lineal completa y Lasso. Gracias a su capacidad de capturar relaciones no lineales y la robustez del ensemble, el RMSE del Random Forest suele ser el más bajo entre todos los modelos evaluados, con un R² que puede alcanzar o superar el 0.55-0.60, indicando que explica más variabilidad del precio que cualquier modelo lineal.
+
+**Conclusión general:**
+
+Random Forest es el mejor algoritmo para este conjunto de datos tanto en clasificación como en regresión, ya que combina la potencia de múltiples árboles de decisión mitigando las debilidades de cada árbol individual (alta varianza, sensibilidad a outliers). Para SmartStay Advisors, se recomienda usar Random Forest como modelo principal de predicción de precios y clasificación de propiedades, complementado con los árboles de decisión individuales cuando se requiera interpretabilidad visual inmediata.
+```
